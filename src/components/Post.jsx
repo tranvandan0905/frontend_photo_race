@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Card, Button, Image, Spinner } from "react-bootstrap";
 import { FaThumbsUp, FaComment, FaStar } from "react-icons/fa";
 import { getAllPost } from "../services/submission.services";
-import { getAllComment } from "../services/comment.services";
+import { getAllComment, postcommnet } from "../services/comment.services";
 import { PostLike, DeleteLike } from "../services/interaction.services";
 import avatar from "../assets/avata.jpg";
 
@@ -14,24 +14,24 @@ function Post(user_id) {
   const [inputs, setInputs] = useState({});
   const [liked, setLiked] = useState({});
   const [likeCount, setLikeCount] = useState({});
-useEffect(() => {
+  useEffect(() => {
     getAllPost(user_id).then(res => {
-    if (res.errorCode === 0) {
-      const fetchedPosts = res.data;
-      setPosts(fetchedPosts);
-      const initLiked = {};
-      const initLikeCount = {};
-      fetchedPosts.forEach(p => {
-        initLiked[p._id] = p.isLiked || false; 
-        initLikeCount[p._id] = p.like || 0;
-      });
+      if (res.errorCode === 0) {
+        const fetchedPosts = res.data;
+        setPosts(fetchedPosts);
+        const initLiked = {};
+        const initLikeCount = {};
+        fetchedPosts.forEach(p => {
+          initLiked[p._id] = p.isLiked;
+          initLikeCount[p._id] = p.like;
+        });
 
-      setLiked(initLiked);
-      setLikeCount(initLikeCount);
-    }
-    setLoading(false);
-  });
-}, [user_id]);
+        setLiked(initLiked);
+        setLikeCount(initLikeCount);
+      }
+      setLoading(false);
+    });
+  }, [user_id]);
 
 
   const toggleComments = async (postId) => {
@@ -42,22 +42,49 @@ useEffect(() => {
     }
     setShowComments(prev => ({ ...prev, [postId]: !prev[postId] }));
   };
-  const handleLikeClick = async (post) => {
-  const isLiked = liked[post._id];
+ const postcomments = async (postId) => {
+  const content = inputs[postId];
+  if (!content || content.trim() === "") return;
+
   try {
-    if (!isLiked) {
-      await PostLike(post._id);
-      setLiked(prev => ({ ...prev, [post._id]: true }));
-      setLikeCount(prev => ({ ...prev, [post._id]: prev[post._id] + 1 }));
-    } else {
-      await DeleteLike(post._id);
-      setLiked(prev => ({ ...prev, [post._id]: false }));
-      setLikeCount(prev => ({ ...prev, [post._id]: prev[post._id] - 1 }));
+    const res = await postcommnet(postId, content.trim());
+    
+
+    if (res.data) {
+      // Lấy lại danh sách bình luận sau khi thêm
+      const commentRes = await getAllComment(postId);
+      setCommentsData((prev) => ({
+        ...prev,
+        [postId]: commentRes.data,
+      }));
+
+      // Xóa input sau khi gửi
+      setInputs((prev) => ({ ...prev, [postId]: "" }));
     }
   } catch (err) {
-    console.error("Error updating like:", err);
+    console.error("Lỗi khi gửi bình luận:", err);
   }
 };
+
+  const handleLikeClick = async (post) => {
+    const isLiked = liked[post._id];
+    try {
+      if (!isLiked) {
+       const like= await PostLike(post._id);
+       if(like.data?.isLiked){
+        setLiked(prev => ({ ...prev, [post._id]: true }));
+        setLikeCount(prev => ({ ...prev, [post._id]:like.data?.likeCount}));
+       }
+      } else {
+      const like=  await DeleteLike(post._id);
+      if(!like.data?.isLiked)
+      setLiked(prev => ({ ...prev, [post._id]: false }));
+      setLikeCount(prev => ({ ...prev, [post._id]:like.data?.likeCount}));
+      }
+    } catch (err) {
+      console.error("Error updating like:", err);
+    }
+  };
 
 
   if (loading) return <div className="text-center py-5"><Spinner animation="border" /></div>;
@@ -120,15 +147,16 @@ useEffect(() => {
               </div>
             ))}
 
-            <div className="d-flex mt-2">
-              <input
-                className="form-control me-2"
-                placeholder="Viết bình luận..."
-                value={inputs[post._id] || ""}
-                onChange={e => setInputs({ ...inputs, [post._id]: e.target.value })}
-              />
-              <Button onClick={() => alert(`Gửi: ${inputs[post._id]}`)}>Gửi</Button>
-            </div>
+            <input
+              className="form-control me-2"
+              placeholder="Viết bình luận..."
+              value={inputs[post._id] || ""}
+              onChange={(e) =>
+                setInputs((prev) => ({ ...prev, [post._id]: e.target.value }))
+              }
+            />
+            <Button onClick={() => postcomments(post._id)}>Gửi</Button>
+
           </>
         )}
 

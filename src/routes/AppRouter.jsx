@@ -7,6 +7,8 @@ import CreatePost from "../components/CreatePost";
 import SearchUser from "../components/UserList";
 import ProfileHeader from "../components/ProfileHeader";
 import EditUserForm from "../components/EditUserForm";
+import Logout from "../pages/Logout";
+import Topic from "../pages/Topic";
 
 function AppRoutes() {
   return (
@@ -15,13 +17,15 @@ function AppRoutes() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<ProfileHeader />} />
-        <Route path="/CreatePost" element={<CreatePost/>}/>
-        <Route path="/SearchUser" element={<SearchUser/>}/>
-        <Route path="/EditUserForm" element={<EditUserForm/>}/>
+        <Route path="/CreatePost" element={<CreatePost />} />
+        <Route path="/SearchUser" element={<SearchUser />} />
+        <Route path="/EditUserForm" element={<EditUserForm />} />
       </Route>
 
       {/* Route không dùng layout */}
+      <Route path="/Topic" element={<Topic />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/logout" element={<Logout />} />
     </Routes>
   );
 }

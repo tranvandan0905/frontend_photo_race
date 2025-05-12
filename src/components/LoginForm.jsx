@@ -18,9 +18,10 @@ function LoginForm() {
     try {
       const res = await Login(form.email, form.password); 
       if (res && res.token) {
-        console.log("TOKEN:", localStorage.getItem("token")); 
         setAlert({ message: "Đăng nhập thành công!", variant: "success" });
-        navigate("/");
+          setTimeout(() => {
+          navigate('/', { state: { loggedIn: true } });
+        }, 5000);
       }
     } catch (error) {
       setAlert({
