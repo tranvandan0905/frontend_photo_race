@@ -3,7 +3,7 @@ import { Card, Image, Row, Col, Button, ButtonGroup, Spinner, Alert } from 'reac
 import { FaEnvelope, FaCoins, FaUserEdit, FaBan, FaUser } from "react-icons/fa";
 import { getAllUser } from "../services/user.services";
 import avatar from "../assets/avata.jpg";
-import Post from "./Post";
+import Post from "../pages/Post";
 import { Link, useSearchParams } from "react-router-dom";
 function ProfileHeader() {
   const [user, setuser] = useState([]);

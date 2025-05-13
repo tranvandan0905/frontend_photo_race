@@ -21,7 +21,7 @@ function LoginForm() {
         setAlert({ message: "Đăng nhập thành công!", variant: "success" });
           setTimeout(() => {
           navigate('/', { state: { loggedIn: true } });
-        }, 5000);
+        }, 3000);
       }
     } catch (error) {
       setAlert({

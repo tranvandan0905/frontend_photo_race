@@ -51,7 +51,7 @@ function AppNavbar() {
               <Link to="/" className="text-dark mx-3">
                 <FaHome size={25} className="text-primary" />
               </Link>
-              <Link to="/rank" className="text-dark mx-3">
+              <Link to="/Topranking" className="text-dark mx-3">
                 <FaTrophy size={25} className="text-warning" />
               </Link>
               <Link to="/Topic" className="text-dark mx-3">
