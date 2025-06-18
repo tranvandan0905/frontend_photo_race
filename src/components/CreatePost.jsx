@@ -27,7 +27,7 @@ function CreatePost() {
 
     const formData = new FormData();
     formData.append('title', title);
-    formData.append('image', image);
+    formData.append('file', image);
 
     try {
       await PostSub(formData);

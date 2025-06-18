@@ -2,6 +2,7 @@
 import { Routes, Route } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import Login from "../pages/Login";
+import Register from "../pages/Register";
 import CreatePost from "../components/CreatePost";
 import SearchUser from "../components/UserList";
 import ProfileHeader from "../components/ProfileHeader";
@@ -28,6 +29,7 @@ function AppRoutes() {
       <Route path="/Topic" element={<Topic />} />
       <Route path="/login" element={<Login />} />
       <Route path="/logout" element={<Logout />} />
+      <Route path="/register" element={<Register />} />
     </Routes>
   );
 }

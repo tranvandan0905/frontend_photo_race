@@ -10,3 +10,12 @@ export const Login = async (email, password) => {
     throw new Error(error.response?.data?.message || 'Đăng nhập thất bại!');
   }
 };
+export const register = async (email, name, password) => {
+  try {
+    const response = await axios.post('/register', { email, password,name });
+    return response;
+  } catch (error) {
+    throw new Error(error.response?.data?.message || 'Đăng ký thất bại!');
+  }
+};
+

@@ -8,7 +8,8 @@ function MainLayout() {
     return (
         <>
             <AppNavbar />
-            <Container fluid  className="mt-5">
+        <Container fluid className="custom-top">
+
                 <Row>
                     {/* Cột 1: Sidebar trái */}
                     <Col xs={12} lg={3} className="d-none d-lg-block p-0">

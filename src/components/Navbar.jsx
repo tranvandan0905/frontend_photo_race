@@ -81,7 +81,7 @@ function AppNavbar() {
 
                   <div className="position-absolute top-100 end-0 mt-2 bg-white shadow rounded p-2 z-3">
                     <Link to="/login" className="text-dark me-4"><Button variant="primary" className="w-100 mb-2">Login</Button></Link>
-                    <Link to="/SignUp" className="text-dark me-4"><Button variant="primary" className="w-100 mb-2">SignUp </Button></Link>
+                    <Link to="/register" className="text-dark me-4"><Button variant="primary" className="w-100 mb-2">SignUp </Button></Link>
                   </div>
                 )}
               </div>

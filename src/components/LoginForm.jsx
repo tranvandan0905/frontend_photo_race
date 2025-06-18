@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, Form, Button, Alert } from "react-bootstrap";
 import { Login } from "../services/auth.services";
 
@@ -69,7 +69,7 @@ function LoginForm() {
         <hr />
 
         <div className="text-center">
-          <Button variant="success" className="fw-bold px-4">Tạo tài khoản mới</Button>
+           <Link to="/register" className="text-dark me-4"><Button variant="success" className="fw-bold px-4">Tạo tài khoản mới</Button></Link> 
         </div>
       </Form>
     </Card>
