@@ -1,103 +1,93 @@
 
+import { useEffect, useState } from 'react';
 import { Card, Row, Col, Badge } from 'react-bootstrap';
-import { FaTrophy } from 'react-icons/fa';
-
+import { GetTopranking } from '../services/topranking.services';
+import avatar from "../assets/avata.jpg";
 const TopPlayers = () => {
-  // Sample data for top players with 3 cups and total score
-  const players = [
-    { rank: 1, name: 'Người chơi 1', score: 1500, cup1: 500, cup2: 400, cup3: 600, avatar: 'https://www.example.com/avatar1.jpg' },
-    { rank: 2, name: 'Người chơi 2', score: 1400, cup1: 450, cup2: 350, cup3: 600, avatar: 'https://www.example.com/avatar2.jpg' },
-    { rank: 3, name: 'Người chơi 3', score: 1300, cup1: 400, cup2: 300, cup3: 600, avatar: 'https://www.example.com/avatar3.jpg' },
-  ];
+const [topranking, setTopranking] = useState([]);
 
+  
+    useEffect(() => {
+      getTopranking();
+      
+    }, []);
+     const getTopranking = async () => {
+    const listtopic = await GetTopranking();
+    const latest = listtopic?.data?.data; // lấy danh sách từ response
+      console.log(latest);
+    if (Array.isArray(latest) && latest.length > 0) {
+      const top5 = latest.slice(0, 3); // lấy 5 người đầu tiên
+      setTopranking(top5);
+    }
+      
+  };
   return (
-    <Card className="mb-4 shadow-sm border-0 rounded-4 p-3">
-      <Card.Body>
-        <Card.Title className="fs-4 fw-bold text-center mb-4">Bảng xếp hạng Top người chơi</Card.Title>
+  <Card className="mb-4 shadow-sm border-0 rounded-4 p-3">
+    <Card.Body>
+      <Card.Title className="fs-4 fw-bold text-center mb-4">Bảng xếp hạng Top người chơi</Card.Title>
 
-        {/* Flex container for layout */}
-        <Row className="d-flex justify-content-center">
-          {/* Top 2 and 3 players */}
-          <Col xs={6} md={4} className="d-flex justify-content-center mb-4 mb-md-0">
+      <Row className="d-flex justify-content-center">
+        {/* Top 2 */}
+        <Col xs={6} md={4} className="d-flex justify-content-center mb-4 mb-md-0">
+          {topranking[1] && (
             <Card className="shadow-sm border-0 rounded-4 p-3 text-center">
               <Card.Img
                 variant="top"
-                src={players[1].avatar}
+                src={topranking[1].avatar || avatar}
                 className="rounded-circle mb-3"
                 style={{ width: '80px', height: '80px', objectFit: 'cover' }}
               />
-              <Card.Title className="fs-5 fw-semibold">{players[1].name}</Card.Title>
+               <Badge  className="mb-2">Top 2</Badge>
+              <Card.Title className="fs-5 fw-semibold">{topranking[1].user_name}</Card.Title>
               <Card.Text>
-                <div className="d-flex justify-content-center mb-2">
-                  <FaTrophy className="me-1 text-secondary" /> {players[1].cup1} điểm (Cúp 1)
-                </div>
-                <div className="d-flex justify-content-center mb-2">
-                  <FaTrophy className="me-1 text-secondary" /> {players[1].cup2} điểm (Cúp 2)
-                </div>
-                <div className="d-flex justify-content-center mb-2">
-                  <FaTrophy className="me-1 text-secondary" /> {players[1].cup3} điểm (Cúp 3)
-                </div>
-                <Badge bg="secondary" className="mb-2">#2</Badge>
-                <div>Tổng điểm: {players[1].score}</div>
+                  <span className="d-block">Tổng điểm: {topranking[1].totalScore}</span>
               </Card.Text>
             </Card>
-          </Col>
+          )}
+        </Col>
 
-          {/* Top 1 player in the center, higher than others */}
-          <Col xs={6} md={4} className="d-flex justify-content-center mb-4 mb-md-0">
+        {/* Top 1 */}
+        <Col xs={6} md={4} className="d-flex justify-content-center mb-4 mb-md-0">
+          {topranking[0] && (
             <Card className="shadow-sm border-0 rounded-4 p-3 text-center" style={{ position: 'relative', top: '-20px' }}>
               <Card.Img
                 variant="top"
-                src={players[0].avatar}
+                src={topranking[0].avatar || avatar}
                 className="rounded-circle mb-3"
                 style={{ width: '100px', height: '100px', objectFit: 'cover' }}
               />
-              <Card.Title className="fs-4 fw-bold">{players[0].name}</Card.Title>
+               <Badge  className="mb-2">Top 1</Badge>
+              <Card.Title className="fs-4 fw-bold">{topranking[0].user_name}</Card.Title>
               <Card.Text>
-                <div className="d-flex justify-content-center mb-2">
-                  <FaTrophy className="me-1 text-warning" /> {players[0].cup1} điểm (Cúp 1)
-                </div>
-                <div className="d-flex justify-content-center mb-2">
-                  <FaTrophy className="me-1 text-warning" /> {players[0].cup2} điểm (Cúp 2)
-                </div>
-                <div className="d-flex justify-content-center mb-2">
-                  <FaTrophy className="me-1 text-warning" /> {players[0].cup3} điểm (Cúp 3)
-                </div>
                 <Badge bg="gold" className="mb-2">#1</Badge>
-                <div>Tổng điểm: {players[0].score}</div>
+                  <span className="d-block">Tổng điểm: {topranking[0].totalScore}</span>
               </Card.Text>
             </Card>
-          </Col>
+          )}
+        </Col>
 
-          {/* Top 3 player */}
-          <Col xs={6} md={4} className="d-flex justify-content-center mb-4 mb-md-0">
+        {/* Top 3 */}
+        <Col xs={6} md={4} className="d-flex justify-content-center mb-4 mb-md-0">
+          {topranking[2] && (
             <Card className="shadow-sm border-0 rounded-4 p-3 text-center">
               <Card.Img
                 variant="top"
-                src={players[2].avatar}
+                src={topranking[2].avatar || avatar}
                 className="rounded-circle mb-3"
                 style={{ width: '80px', height: '80px', objectFit: 'cover' }}
               />
-              <Card.Title className="fs-5 fw-semibold">{players[2].name}</Card.Title>
+               <Badge  className="mb-2">Top 3</Badge>
+              <Card.Title className="fs-5 fw-semibold">{topranking[2].user_name}</Card.Title>
               <Card.Text>
-                <div className="d-flex justify-content-center mb-2">
-                  <FaTrophy className="me-1 text-bronze" /> {players[2].cup1} điểm (Cúp 1)
-                </div>
-                <div className="d-flex justify-content-center mb-2">
-                  <FaTrophy className="me-1 text-bronze" /> {players[2].cup2} điểm (Cúp 2)
-                </div>
-                <div className="d-flex justify-content-center mb-2">
-                  <FaTrophy className="me-1 text-bronze" /> {players[2].cup3} điểm (Cúp 3)
-                </div>
-                <Badge bg="bronze" className="mb-2">#3</Badge>
-                <div>Tổng điểm: {players[2].score}</div>
+                 <span className="d-block">Tổng điểm: {topranking[2].totalScore}</span>
               </Card.Text>
             </Card>
-          </Col>
-        </Row>
-      </Card.Body>
-    </Card>
-  );
-};
+          )}
+        </Col>
+      </Row>
+    </Card.Body>
+  </Card>
+);
+}
 
 export default TopPlayers;
