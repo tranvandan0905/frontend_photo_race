@@ -40,7 +40,7 @@ function SidebarLeft() {
     const listtopic = await GetTopranking();
     const latest = listtopic?.data?.data; // lấy danh sách từ response
     if (Array.isArray(latest) && latest.length > 0) {
-      const top5 = latest.slice(0, 5); // lấy 5 người đầu tiên
+      const top5 = latest.slice(0, 3); // lấy 3 người đầu tiên
       setTopranking(top5);
     }
   };
@@ -76,22 +76,37 @@ function SidebarLeft() {
       <ListGroup variant="flush">
         {/* Chủ đề tuần này */}
         {alert.message && <Alert variant={alert.variant}>{alert.message}</Alert>}
-        <ListGroup.Item className="d-flex align-items-start px-4 py-3 border-0" style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}>
-          <FaHotjar className="text-danger me-3 mt-1" size={20} />
+        <ListGroup.Item
+          className="d-flex align-items-start px-4 py-3 border-0 shadow-sm rounded-4 mb-3"
+          style={{
+            background: 'linear-gradient(90deg, #ffe9ec, #fff3f3)',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+            borderLeft: '5px solid #dc3545',
+          }}
+        >
+          <FaHotjar className="text-danger me-3 mt-1" size={28} />
+
           <div className="w-100">
-            <p className="m-0 text-muted">
-              <span className="d-block mb-1">
-                <strong>Chủ đề tuần này:</strong> {topic.title}
+            <p className="m-0" style={{ fontSize: '0.95rem', color: '#333' }}>
+              <span className="d-block mb-1 fs-6 fw-semibold text-danger">
+                🔥 Chủ đề tuần này: {topic.title}
               </span>
               <span className="d-block mb-1">
-                <strong>Thời gian bắt đầu:</strong> {formatDate(topic.start_time)}
+                <strong>Bắt đầu:</strong> {formatDate(topic.start_time)}
               </span>
               <span className="d-block">
-                <strong>Thời gian kết thúc:</strong> {formatDate(topic.end_time)}
+                <strong>Kết thúc:</strong> {formatDate(topic.end_time)}
               </span>
             </p>
-            <Button variant="outline-danger" size="sm" className="mt-2 py-1 px-3 rounded-pill" onClick={handClipVoteTopic}>
-              Vote Chủ đề
+
+            <Button
+              variant="danger"
+              size="sm"
+              className="mt-3 py-1 px-4 rounded-pill fw-medium shadow-sm"
+              onClick={handClipVoteTopic}
+              style={{ fontSize: '0.85rem' }}
+            >
+              🚀 Vote ngay
             </Button>
           </div>
         </ListGroup.Item>

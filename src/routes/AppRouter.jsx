@@ -11,6 +11,8 @@ import Logout from "../pages/Logout";
 import Topic from "../pages/Topic";
 import Post from "../pages/Post";
 import Topranking from "../pages/Topranking";
+import ToprankingSub from "../pages/TopRanking_Sub";
+
 
 function AppRoutes() {
   return (
@@ -30,6 +32,7 @@ function AppRoutes() {
       <Route path="/login" element={<Login />} />
       <Route path="/logout" element={<Logout />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/ToprankingList" element={<ToprankingSub/>} />
     </Routes>
   );
 }

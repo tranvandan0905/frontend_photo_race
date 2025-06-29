@@ -1,12 +1,15 @@
 import { Card, Button, Container, ListGroup, Badge, Alert, Form, FormControl, InputGroup } from 'react-bootstrap';
 import { FaClock, FaHistory, FaSearch } from 'react-icons/fa';
 import { useEffect, useState } from 'react';
-import { GetTopic } from '../services/topic.services';
+import { GetTopic, FindTopic } from '../services/topic.services';
 import { PostVoteTopic } from '../services/interaction.services';
+import { Link } from 'react-router-dom';
 
 const TopicSection = () => {
   const [topic, setTopic] = useState({});
   const [alltopic, setAllTopic] = useState([]);
+  const [findtopic, setFindTopic] = useState([]);
+  const [keyword, setKeyword] = useState("");
   const [alert, setAlert] = useState({ message: null, variant: "danger" });
 
   useEffect(() => {
@@ -35,6 +38,21 @@ const TopicSection = () => {
       });
     }
   }
+  const handleSearchTopic = async () => {
+    try {
+      const response = await FindTopic(keyword);
+      setFindTopic(response);
+    } catch (error) {
+      setAlert({
+        message: error.response?.data?.message || error.message || "Có lỗi xảy ra khi gọi API!",
+        variant: "danger",
+      });
+    }
+  }
+  const topicsToDisplay = () => {
+    if (keyword.trim() && findtopic.length > 0) return findtopic;
+    return alltopic;
+  };
 
   return (
     <Container className="mt-5" style={{ maxWidth: '700px' }}>
@@ -69,33 +87,35 @@ const TopicSection = () => {
 
       {/* Lịch sử chủ đề */}
 
-<div className="d-flex justify-content-between align-items-center mb-4">
-  {/* Tiêu đề lịch sử chủ đề */}
-  <div className="d-flex align-items-center text-dark fw-semibold fs-5">
-    <FaHistory className="me-2" />
-    Các chủ đề trước đó
-  </div>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        {/* Tiêu đề lịch sử chủ đề */}
+        <div className="d-flex align-items-center text-dark fw-semibold fs-5">
+          <FaHistory className="me-2" />
+          Các chủ đề trước đó
+        </div>
 
-  {/* Form tìm kiếm */}
-  <Form>
-    <InputGroup size="sm">
-      <FormControl
-        type="search"
-        placeholder="Tìm kiếm..."
-        className="rounded-start-pill"
-        style={{ borderRight: 'none' }}
-      />
-      <Button variant="primary" className="rounded-end-pill">
-        <FaSearch />
-      </Button>
-    </InputGroup>
-  </Form>
-</div>
+        {/* Form tìm kiếm */}
+        <Form>
+          <InputGroup size="sm">
+            <FormControl
+              type="search"
+              placeholder="Tìm kiếm..."
+              className="rounded-start-pill"
+              style={{ borderRight: 'none' }}
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+            />
+            <Button variant="primary" className="rounded-end-pill" onClick={handleSearchTopic}>
+              <FaSearch />
+            </Button>
+          </InputGroup>
+        </Form>
+      </div>
 
       <ListGroup variant="flush">
-        {alltopic.map((item) => (
+        {topicsToDisplay().map((item) => (
           <ListGroup.Item
-            key={item.id}
+            key={item._id}
             className="d-flex justify-content-between align-items-center border-0 mb-2 px-3 py-2 rounded-3"
             style={{
               backgroundColor: '#f0f2f5',
@@ -103,7 +123,13 @@ const TopicSection = () => {
             }}
           >
             <div>
-              <div className="fw-bold">{item.title}</div>
+              <Link
+                to={`/ToprankingList?idtopic=${encodeURIComponent(item._id)}`}
+                className="fw-bold"
+              >
+                {item.title}
+              </Link>
+
               <div className="text-muted small">{new Date(item.start_time).toLocaleString()} - {new Date(item.end_time).toLocaleString()}</div>
             </div>
             <Badge bg="light" text="dark" className="rounded-pill px-3 py-1">

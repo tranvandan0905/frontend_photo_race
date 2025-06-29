@@ -1,5 +1,5 @@
 import { Navbar, Container, Nav, Form, FormControl, Button } from 'react-bootstrap';
-import { FaSearch, FaHome, FaTrophy, FaFire, FaCoins, FaUser, FaUserCog } from 'react-icons/fa';
+import { FaSearch, FaHome, FaTrophy, FaFire, FaCoins, FaUser, FaUserCog, FaBell } from 'react-icons/fa';
 import { FcSoundRecordingCopyright } from 'react-icons/fc';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -59,6 +59,9 @@ function AppNavbar() {
               </Link>
               <Link to="/coin" className="text-dark mx-3">
                 <FaCoins size={25} className="text-warning" />
+              </Link>
+              <Link to="/notification" className="text-dark mx-3">
+                <FaBell size={25} className="text-primary" />
               </Link>
             </Nav>
           </div>
