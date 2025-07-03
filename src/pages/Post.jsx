@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Card, Button, Image, Spinner, Alert } from "react-bootstrap";
+import {
+  Card, Button, Image, Spinner, 
+  Toast, ToastContainer
+} from "react-bootstrap";
 import { FaThumbsUp, FaComment, FaStar } from "react-icons/fa";
 import { getAllPost } from "../services/submission.services";
-import { getAllComment, postcommnet } from "../services/comment.services";
-import { PostLike, DeleteLike, PostVoteSubmission, findVoteSub, findLike, DeleteVoteSubmission } from "../services/interaction.services";
+import {
+  getAllComment, postcommnet
+} from "../services/comment.services";
+import {
+  PostLike, DeleteLike, PostVoteSubmission,
+  findVoteSub, findLike, DeleteVoteSubmission
+} from "../services/interaction.services";
 import avatar from "../assets/avata.jpg";
+
 function Post(user_id) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +24,7 @@ function Post(user_id) {
   const [voteCount, setVoteCount] = useState({});
   const [commentCount, setCommentCount] = useState({});
   const [alert, setAlert] = useState({ message: null, variant: "danger" });
+
   useEffect(() => {
     getAllPost(user_id).then(res => {
       if (res.errorCode === 0) {
@@ -36,8 +46,8 @@ function Post(user_id) {
       }
       setLoading(false);
     });
-
   }, [user_id]);
+
   const toggleComments = async (postId) => {
     const showing = showComments[postId];
     if (!showing) {
@@ -46,6 +56,7 @@ function Post(user_id) {
     }
     setShowComments(prev => ({ ...prev, [postId]: !prev[postId] }));
   };
+
   const postcomments = async (postId) => {
     const content = inputs[postId];
     if (!content || content.trim() === "") return;
@@ -53,77 +64,73 @@ function Post(user_id) {
       const res = await postcommnet(postId, content.trim());
       if (res.data) {
         const commentRes = await getAllComment(postId);
-        setCommentsData((prev) => ({
+        setCommentsData(prev => ({
           ...prev,
-          [postId]: commentRes.data,
+          [postId]: commentRes.data
         }));
         setCommentCount(prev => ({ ...prev, [postId]: commentRes.Sumcomment }));
-        setInputs((prev) => ({ ...prev, [postId]: "" }));
+        setInputs(prev => ({ ...prev, [postId]: "" }));
       }
     } catch (error) {
       setAlert({
         message: error.response?.data?.message || error.message || "Có lỗi xảy ra khi gọi API!",
-        variant: "danger",
+        variant: "danger"
       });
     }
   };
 
   const handleLikeClick = async (post) => {
-
     try {
       const isLiked = await findLike(post._id);
       if (!isLiked.check) {
         const like = await PostLike(post._id);
         if (like.data?.isLiked) {
-
-          setLikeCount(prev => ({ ...prev, [post._id]: like.data?.likeCount }));
+          setLikeCount(prev => ({ ...prev, [post._id]: like.data.likeCount }));
         }
       } else {
         const like = await DeleteLike(post._id);
-        if (!like.data?.isLiked)
-
-          setLikeCount(prev => ({ ...prev, [post._id]: like.data?.likeCount }));
+        if (!like.data?.isLiked) {
+          setLikeCount(prev => ({ ...prev, [post._id]: like.data.likeCount }));
+        }
       }
     } catch (error) {
       setAlert({
         message: error.response?.data?.message || error.message || "Có lỗi xảy ra khi gọi API!",
-        variant: "danger",
+        variant: "danger"
       });
     }
   };
 
   const handClipVoteSubmission = async (post) => {
-
     try {
-      const isVoted = await findVoteSub(post._id)
+      const isVoted = await findVoteSub(post._id);
       if (!isVoted.check) {
         const vote = await PostVoteSubmission(post._id);
         if (vote.data?.isVoted) {
-          setVoteCount(prev => ({ ...prev, [post._id]: vote.data?.VoteCount }));
+          setVoteCount(prev => ({ ...prev, [post._id]: vote.data.VoteCount }));
         }
       } else {
         const vote = await DeleteVoteSubmission(post._id);
-        if (!vote.data?.isVoted)
-
-          setVoteCount(prev => ({ ...prev, [post._id]: vote.data?.VoteCount }));
+        if (!vote.data?.isVoted) {
+          setVoteCount(prev => ({ ...prev, [post._id]: vote.data.VoteCount }));
+        }
       }
     } catch (error) {
       setAlert({
         message: error.response?.data?.message || error.message || "Có lỗi xảy ra khi gọi API!",
-        variant: "danger",
+        variant: "danger"
       });
     }
-  }
+  };
 
-  if (loading) { return <div className="text-center py-5"><Spinner animation="border" /></div> };
+  if (loading) {
+    return <div className="text-center py-5"><Spinner animation="border" /></div>;
+  }
 
   return (
     <>
-      {alert.message && <Alert variant={alert.variant}>{alert.message}</Alert>}
       {posts.map(post => (
-
         <Card key={post._id} className="mb-3 shadow-sm">
-
           <Card.Header className="d-flex align-items-center">
             <Image src={post.avatar || avatar} roundedCircle width={40} height={40} className="me-2" />
             <div>
@@ -134,27 +141,35 @@ function Post(user_id) {
 
           <Card.Body>
             <Card.Text>{post.title}</Card.Text>
-            {post.image && <img src={post.image} alt="" className="img-fluid rounded mb-3" />}
-
+            {post.image && (
+              <img src={post.image} alt="" className="img-fluid rounded mb-3" />
+            )}
 
             <div className="mt-3 d-flex justify-content-between align-items-center">
               <Button
                 variant="outline-primary"
                 size="sm"
-                className="d-flex align-items-center py-1 px-3 border-0 hover-shadow "
+                className="d-flex align-items-center py-1 px-3 border-0"
                 onClick={() => handleLikeClick(post)}
               >
                 <FaThumbsUp className="me-1" size={18} />
                 {likeCount[post._id] || 0} Like
               </Button>
 
-              <Button variant="outline-secondary" size="sm" className="d-flex align-items-center py-1 px-3 border-0 hover-shadow" onClick={() => toggleComments(post._id)}
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                className="d-flex align-items-center py-1 px-3 border-0"
+                onClick={() => toggleComments(post._id)}
               >
-                <FaComment className="me-1" size={18} /> {commentCount[post._id] || 0}Comment
+                <FaComment className="me-1" size={18} />
+                {commentCount[post._id] || 0} Comment
               </Button>
 
               <Button
-                variant="outline-secondary" size="sm" className="d-flex align-items-center py-1 px-3 border-0 hover-shadow  "
+                variant="outline-secondary"
+                size="sm"
+                className="d-flex align-items-center py-1 px-3 border-0"
                 onClick={() => handClipVoteSubmission(post)}
               >
                 <FaStar className="me-1" size={18} />
@@ -165,7 +180,7 @@ function Post(user_id) {
             {showComments[post._id] && (
               <>
                 {(commentsData[post._id] || []).map((cmt, idx) => (
-                  <div key={idx} className="d-flex align-items-start mb-2">
+                  <div key={idx} className="d-flex align-items-start mb-2 mt-3">
                     <Image
                       src={cmt.avatar || avatar}
                       roundedCircle
@@ -181,23 +196,42 @@ function Post(user_id) {
                   </div>
                 ))}
 
-                <input
-                  className="form-control me-2"
-                  placeholder="Viết bình luận..."
-                  value={inputs[post._id] || ""}
-                  onChange={(e) =>
-                    setInputs((prev) => ({ ...prev, [post._id]: e.target.value }))
-                  }
-                />
-                <Button onClick={() => postcomments(post._id)}>Gửi</Button>
-
+                <div className="d-flex mt-2">
+                  <input
+                    className="form-control me-2"
+                    placeholder="Viết bình luận..."
+                    value={inputs[post._id] || ""}
+                    onChange={(e) =>
+                      setInputs(prev => ({ ...prev, [post._id]: e.target.value }))
+                    }
+                  />
+                  <Button onClick={() => postcomments(post._id)}>Gửi</Button>
+                </div>
               </>
             )}
-
           </Card.Body>
         </Card>
       ))}
-    </>);
+
+      {/* Toast Thông báo nổi */}
+      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
+        <Toast
+          bg={alert.variant === 'success' ? 'success' : 'danger'}
+          onClose={() => setAlert({ ...alert, message: null })}
+          show={!!alert.message}
+          delay={3000}
+          autohide
+        >
+          <Toast.Header>
+            <strong className="me-auto">
+              {alert.variant === 'success' ? '✅ Thành công' : '❌ Lỗi'}
+            </strong>
+          </Toast.Header>
+          <Toast.Body className="text-white">{alert.message}</Toast.Body>
+        </Toast>
+      </ToastContainer>
+    </>
+  );
 }
 
 export default Post;

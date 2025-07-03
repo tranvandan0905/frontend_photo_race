@@ -1,32 +1,49 @@
 import axios from "axios";
 
-const instance = axios.create({
+//  Hàm xử lý lỗi chung cho cả hai instance
+const handleResponseError = (error) => {
+  if (error.response) {
+    console.error(" API error:", error.response.data.message || error.response.data);
+  } else if (error.request) {
+    console.error(" No response received:", error.request);
+  } else {
+    console.error(" Request setup error:", error.message);
+  }
+  return Promise.reject(error);
+};
+
+//  Instance cho advertiser
+export const advertiserAxios = axios.create({
   baseURL: "http://localhost:3001/api",
 });
-instance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+
+advertiserAxios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("advertiser_token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-);
-instance.interceptors.response.use(
+  return config;
+});
+
+advertiserAxios.interceptors.response.use(
   (response) => response.data,
-  (error) => {
-    if (error.response) {
-      console.error(" Axios error:", error.response.data);
-    } else if (error.request) {
-      console.error(" No response received:", error.request);
-    } else {
-      console.error(" Request setup error:", error.message);
-    }
-    return Promise.reject(error);
-  }
+  handleResponseError
 );
 
-export default instance;
+// Instance cho user
+export const userAxios = axios.create({
+  baseURL: "http://localhost:3001/api",
+});
+
+userAxios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+userAxios.interceptors.response.use(
+  (response) => response.data,
+  handleResponseError
+);
