@@ -43,7 +43,7 @@ function NavbarAds() {
                         </Link>
                     </li>
                     <li className="nav-item mb-3">
-                        <Link to="/advertisers" className="nav-link text-dark d-flex align-items-center">
+                        <Link to="/ProfileAds" className="nav-link text-dark d-flex align-items-center">
                             <FaUser className="me-2 text-primary" /> Hồ sơ
                         </Link>
                     </li>

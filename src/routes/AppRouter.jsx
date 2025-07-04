@@ -16,6 +16,9 @@ import LoginAds from "../pages/LoginAds";
 import RegisterAds from "../pages/RegisterAds";
 import CreateAdForm from "../pages/Ads";
 import UserSettings from "../pages/UserSettings";
+import AdsList from "../components/AdsList";
+import ProfileAds from "../pages/ProfileAds";
+import EditAdsForm from "../components/EditAdsForm";
 
 
 function AppRoutes() {
@@ -30,7 +33,10 @@ function AppRoutes() {
         <Route path="/EditUserForm" element={<UserSettings />} />
       </Route>
       <Route element={<MainLayoutAds />}>
-        <Route path="/ads" element={<CreateAdForm/>} />
+        <Route path="/ads" element={<CreateAdForm />} />
+        <Route path="/statistical" element={<AdsList />} />
+        <Route path="/ProfileAds" element={<ProfileAds />} />
+        <Route path="/EditAdsFrom" element={<EditAdsForm />} />
       </Route>
       {/* Route không dùng layout */}
       <Route path="/Topranking" element={<Topranking />} />
