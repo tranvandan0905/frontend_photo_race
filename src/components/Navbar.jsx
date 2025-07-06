@@ -57,7 +57,7 @@ function AppNavbar() {
               <Link to="/Topic" className="text-dark mx-3">
                 <FaFire size={25} className="text-danger" />
               </Link>
-              <Link to="/coin" className="text-dark mx-3">
+              <Link to="/banking" className="text-dark mx-3">
                 <FaCoins size={25} className="text-warning" />
               </Link>
               <Link to="/notification" className="text-dark mx-3">

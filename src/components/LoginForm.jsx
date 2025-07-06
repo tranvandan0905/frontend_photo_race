@@ -17,11 +17,15 @@ function LoginForm() {
     
     try {
       const res = await Login(form.email, form.password); 
-      if (res && res.token) {
+      if (res.token) {
         setAlert({ message: "Đăng nhập thành công!", variant: "success" });
           setTimeout(() => {
           navigate('/', { state: { loggedIn: true } });
         }, 3000);
+      }
+      else
+      {
+         setAlert({ message:res.message, variant: "success" });
       }
     } catch (error) {
       setAlert({
