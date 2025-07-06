@@ -33,8 +33,8 @@ function AppRoutes() {
         <Route path="/CreatePost" element={<CreatePost />} />
         <Route path="/SearchUser" element={<SearchUser />} />
         <Route path="/EditUserForm" element={<UserSettings />} />
-        <Route path="/banking" element={<BankingPage />} />
-       
+
+
       </Route>
       <Route element={<MainLayoutAds />}>
         <Route path="/ads" element={<CreateAdForm />} />
@@ -51,7 +51,8 @@ function AppRoutes() {
       <Route path="/register" element={<Register />} />
       <Route path="/registerAds" element={<RegisterAds />} />
       <Route path="/ToprankingList" element={<ToprankingSub />} />
-       <Route path="/banking/momo-success" element={<MomoSuccessPage />} />
+      <Route path="/banking" element={<BankingPage />} />
+      <Route path="/banking/momo-success" element={<MomoSuccessPage />} />
     </Routes>
   );
 }
