@@ -20,6 +20,7 @@ function CreatePost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!title || !image) {
       setAlert({ type: 'danger', message: 'Vui lòng nhập tiêu đề và chọn ảnh!' });
       return;
@@ -35,19 +36,23 @@ function CreatePost() {
       setTitle('');
       setImage(null);
       setPreview(null);
+
       setTimeout(() => {
         navigate("/");
       }, 1000);
     } catch (err) {
-      setAlert({ type: 'danger', message: 'Đăng bài thất bại!' });
-      console.error(err);
+      const errorMessage =
+        err?.response?.data?.message || err?.message || "Đăng bài thất bại!";
+      setAlert({ type: 'danger', message: errorMessage });
+      console.error("Lỗi khi đăng bài:", err);
     }
   };
+
 
   return (
     <Card className="p-4 shadow-sm mt-5">
       <h4 className="mb-3 text-center">Đăng Bài Mới</h4>
-      
+
       {alert && <Alert variant={alert.type}>{alert.message}</Alert>}
 
       <Form onSubmit={handleSubmit}>

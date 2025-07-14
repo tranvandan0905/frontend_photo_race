@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaTrophy, FaUser, FaSignOutAlt, FaChartPie } from 'react-icons/fa';
 import { FcSoundRecordingCopyright } from 'react-icons/fc';
 import { Button } from 'react-bootstrap';
@@ -7,6 +7,7 @@ import { Button } from 'react-bootstrap';
 function NavbarAds() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('advertiser_token');
@@ -16,6 +17,7 @@ function NavbarAds() {
     const handleLogout = () => {
         setIsLoggedIn(false);
         localStorage.removeItem("advertiser_token");
+        navigate('/');
     };
 
     return (
@@ -57,8 +59,7 @@ function NavbarAds() {
                         variant="outline-danger"
                         className="w-100 d-flex align-items-center justify-content-center"
                         onClick={handleLogout}
-                        as={Link}
-                        to="/logoutAds"
+                    
                     >
                         <FaSignOutAlt className="me-2" />
                         Đăng xuất

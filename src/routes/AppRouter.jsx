@@ -21,6 +21,8 @@ import ProfileAds from "../pages/ProfileAds";
 import EditAdsForm from "../components/EditAdsForm";
 import BankingPage from "../pages/BankingPage";
 import MomoSuccessPage from "../pages/MomoSuccessPage";
+import ResetPasswordPage from "../pages/ResetPasswordPage";
+import PaswordPage from "../pages/PaswordPage";
 
 
 function AppRoutes() {
@@ -53,6 +55,8 @@ function AppRoutes() {
       <Route path="/ToprankingList" element={<ToprankingSub />} />
       <Route path="/banking" element={<BankingPage />} />
       <Route path="/banking/momo-success" element={<MomoSuccessPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/password" element={<PaswordPage />} />
     </Routes>
   );
 }

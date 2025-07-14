@@ -32,25 +32,36 @@ const BankingFrom = () => {
   }, [active]);
 
 const fetchDepositHistory = async () => {
+   try {
   const res = await getDepositRequest();
   setListDeposit(res?.data?.data || []);
+   } catch (error) {
+ 
+      alert(error.response?.data?.message || "thất bại!");
+    }
 };
 
 const fetchWithdrawHistory = async () => {
+   try {
   const res = await getWithdrawrequest();
   setListWithdraw(res?.data?.data || []);
+   } catch (error) {
+   
+      alert(error.response?.data?.message || "thất bại!");
+    }
 };
 
 
   const handleDeposit = async () => {
     try {
-      const amount = parseInt(depositAmount);
-      if (!amount || amount < 50000) {
+      const xu = parseInt(depositAmount);
+      if (!xu || xu < 50000) {
         alert("Số tiền nạp tối thiểu là 50.000 VNĐ!");
         return;
       }
 
-      const result = await postDepositRequest({ amount });
+      const result = await postDepositRequest({ xu });
+      console.log(result);
       if (result?.payUrl) {
         window.location.href = result.payUrl;
       } else {

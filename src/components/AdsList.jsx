@@ -3,13 +3,15 @@ import {
   ListGroup, Spinner, Card, Button, Badge, Row, Col, Image,
   Modal, Form, Alert
 } from "react-bootstrap";
-import { GetAdsByAdvertiser, UpdateAds } from "../services/ad.services";
+import { GetAdsByAdvertiser, UpdateAds, GetPaymentADS } from "../services/ad.services";
 
 const formatDate = (dateString) => new Date(dateString).toLocaleDateString("vi-VN");
 
 const AdsList = () => {
   const [ads, setAds] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [payments, setPayments] = useState([]);
+  const [visibleAdId, setVisibleAdId] = useState(null);
 
   const [showModal, setShowModal] = useState(false);
   const [selectedAd, setSelectedAd] = useState(null);
@@ -26,7 +28,6 @@ const AdsList = () => {
       const res = await GetAdsByAdvertiser();
       setAds(res.data);
     } catch (err) {
-      console.error("Lỗi khi lấy quảng cáo:", err);
       setAds([]);
     }
     setLoading(false);
@@ -44,13 +45,36 @@ const AdsList = () => {
   const handleFormChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const handGetByIDBayment = async (id) => {
+    if (visibleAdId === id) {
+      setVisibleAdId(null);
+      setPayments([]);
+      return;
+    }
+
+    try {
+      const res = await GetPaymentADS(id);
+      setPayments(res.data || []);
+      setVisibleAdId(id);
+    } catch (error) {
+      setPayments([]);
+      setVisibleAdId(id);
+    }
+  };
+
 
   const handleUpdate = async () => {
     try {
-       await UpdateAds(selectedAd._id, {
+      const result = await UpdateAds(selectedAd._id, {
         start_date: formData.start_date,
         end_date: formData.end_date,
       });
+      if (result?.payUrl) {
+        window.location.href = result.payUrl;
+      } else {
+
+        setAlert({ variant: 'danger', message: 'Không nhận được liên kết thanh toán!' });
+      }
       setAlert({ type: "success", message: "Gia hạn thành công!" });
       setShowModal(false);
       fetchAds();
@@ -83,37 +107,120 @@ const AdsList = () => {
                 </Col>
 
                 <Col md={6}>
-                  <h5 className="text-primary fw-bold">{ad.title}</h5>
-                  <p className="mb-1">{ad.content}</p>
-                  <div className="text-muted" style={{ fontSize: "14px" }}>
-                    <div><strong>Giá/ngày:</strong> {ad.price_per_day.toLocaleString()}₫</div>
-                    <div><strong>Tổng chi phí:</strong> {ad.total_cost.toLocaleString()}₫</div>
-                    <div><strong>Thời gian:</strong> {formatDate(ad.start_date)} - {formatDate(ad.end_date)}</div>
-                    <div>
-                      <strong>Trạng thái:</strong>{" "}
-                      <Badge bg={
-                        ad.status === "active" ? "success" :
-                          ad.status === "pending" ? "warning" :
-                            ad.status === "completed" ? "secondary" : "danger"
-                      }>
-                        {ad.status.toUpperCase()}
-                      </Badge>
-                    </div>
-                  </div>
+                  <h5 className="fw-bold text-primary mb-2">{ad.title}</h5>
+
+                  <p className="mb-2 text-dark">{ad.content}</p>
+
+                  <Row className="mb-2">
+                    <Col xs={12} sm={6}>
+                      <small className="text-muted">
+                        <strong>Thời gian:</strong><br />
+                        {formatDate(ad.start_date)} - {formatDate(ad.end_date)}
+                      </small>
+                    </Col>
+                    <Col xs={12} sm={6}>
+                      <small className="text-muted">
+                        <strong>Trạng thái:</strong><br />
+                        <Badge bg={
+                          ad.status === "completed" ? "secondary" :
+                            ad.status === "active" ? "success" :
+                              ad.status === "pending" ? "warning" :
+                                ad.status === "rejected" ? "danger" :
+                                  "dark"
+                        }>
+                          {ad.status}
+                        </Badge>
+                      </small>
+                    </Col>
+                  </Row>
+
+                  <Button
+                    variant={visibleAdId === ad._id ? "outline-danger" : "outline-primary"}
+                    size="sm"
+                    onClick={() => handGetByIDBayment(ad._id)}
+                    className="mt-2"
+                  >
+                    {visibleAdId === ad._id ? "Ẩn lịch sử" : "📜 Lịch sử thanh toán"}
+                  </Button>
                 </Col>
 
+
                 <Col md={3} className="d-flex align-items-center justify-content-end">
-                  {ad.is_extendable && ad.status === "completed" ? (
-                    <Button variant="outline-primary" size="sm" onClick={() => handleExtendClick(ad)}>
-                      Gia hạn
-                    </Button>
-                  ) : (
-                    <Button variant="secondary" size="sm" disabled>
-                      Không thể gia hạn
-                    </Button>
-                  )}
+                  {(() => {
+                    switch (ad.status) {
+                      case "completed":
+                        return (
+                          <Button variant="outline-primary" size="sm" onClick={() => handleExtendClick(ad)}>
+                            Gia hạn
+                          </Button>
+                        );
+
+                      case "active":
+                        return (
+                          <Button variant="success" size="sm" disabled>
+                            Đang hiển thị
+                          </Button>
+                        );
+
+                      case "pending":
+                        return (
+                          <Button variant="warning" size="sm" disabled>
+                            Chờ duyệt
+                          </Button>
+                        );
+
+                      case "rejected":
+                        return (
+                          <Button variant="danger" size="sm" disabled>
+                            Đã từ chối
+                          </Button>
+                        );
+
+                      default:
+                        return (
+                          <Button variant="secondary" size="sm" disabled>
+                            Không rõ trạng thái
+                          </Button>
+                        );
+                    }
+                  })()}
+
                 </Col>
               </Row>
+              {/* Lịch sử thanh toán hiển thị nếu ad đang được chọn */}
+              {visibleAdId === ad._id && (
+                <Card className="mt-3">
+                  <Card.Body>
+                    <h6 className="fw-bold text-primary mb-2">Lịch sử thanh toán:</h6>
+                    {payments.length === 0 ? (
+                      <p className="text-muted">Không có lịch sử thanh toán.</p>
+                    ) : (
+                      <ListGroup>
+                        {payments.map((payment, idx) => (
+                          <ListGroup.Item key={idx} className="border-0 border-bottom">
+                            <Row className="align-items-center">
+                              <Col md={3}><strong>Số tiền:</strong> <span className="text-success">{payment.amount.toLocaleString()}đ</span></Col>
+                              <Col md={3}><strong>Giá/ngày:</strong> <span>{payment.price_per_day.toLocaleString()}đ</span></Col>
+                              <Col md={3}>
+                                <strong>Trạng thái:</strong>{" "}
+                                <Badge bg={
+                                  payment.status === 'success' ? 'success' :
+                                    payment.status === 'failed' ? 'danger' : 'warning'
+                                }>
+                                  {payment.status}
+                                </Badge>
+                              </Col>
+                              <Col md={3}><strong>Ngày thanh toán:</strong> {formatDate(payment.paid_at)}</Col>
+                            </Row>
+                          </ListGroup.Item>
+                        ))}
+                      </ListGroup>
+                    )}
+                  </Card.Body>
+                </Card>
+              )}
+
+
             </ListGroup.Item>
           ))}
         </ListGroup>

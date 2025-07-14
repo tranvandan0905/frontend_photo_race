@@ -17,6 +17,7 @@ const TopPlayers = () => {
     const latest = listtopic?.data?.data;
     setAllTopranking(latest);
     setUser_newtoprank(newtoprank.data?.data);
+    console.log(newtoprank.data.data)
     if (Array.isArray(latest) && latest.length > 0) {
       const top3 = latest.slice(0, 3);
       setTopranking(top3);
@@ -97,7 +98,7 @@ const TopPlayers = () => {
                     <img src={user.avatar || avatar} alt="avatar" width="40" height="40" className="rounded-circle" />
                     <div>
                       <strong>{user.user_name}</strong><br />
-                      <small>Tổng điểm: {user.totalScore}</small>
+                      <small>Tổng điểm: {user.total_score}</small>
                     </div>
                   </ListGroup.Item>
                 ))}

@@ -67,7 +67,8 @@ function LoginForm() {
         </Button>
 
         <div className="text-center mt-3 mb-2">
-          <a href="#!" className="text-decoration-none">Quên mật khẩu?</a>
+       
+             <Link to="/password" className="text-decoration-none">Quên mật khẩu</Link> 
         </div>
 
         <hr />

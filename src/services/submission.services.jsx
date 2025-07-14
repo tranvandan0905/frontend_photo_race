@@ -1,8 +1,9 @@
-import {userAxios} from '../services/axios';
+import { userAxios } from '../services/axios';
 export const getAllPost = async (user) => {
-const user_id=user.user_id;
+  const user_id = user.user_id;
   const response = await userAxios.get(`/submission`, {
-    params: user_id ? { user_id } : {},});
+    params: user_id ? { user_id } : {},
+  });
   return response;
 };
 export const PostSub = async (data) => {
@@ -11,5 +12,10 @@ export const PostSub = async (data) => {
       'Content-Type': 'multipart/form-data',
     },
   });
+  return response;
+};
+export const deleteSub = async (id) => {
+ console.log(id);
+  const response = await userAxios.delete(`/submission/${id}`);
   return response;
 };

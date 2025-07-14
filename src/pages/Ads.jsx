@@ -14,8 +14,6 @@ function CreateAdForm() {
   });
 
   const [alert, setAlert] = useState({ message: null, variant: "danger" });
-  const navigate = useNavigate();
-
 const handleChange = (e) => {
   const { name, value } = e.target;
   setForm({
@@ -28,14 +26,18 @@ const handleChange = (e) => {
 const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createAd(form);
-     setAlert({ variant: 'success', message: 'Đăng ký thành công!' });
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
-    } catch (err) {
-     setAlert({ variant: 'danger', message: 'Đăng ký thất bại!' });
-      console.error(err);
+    
+           const result =  await createAd(form);
+           if (result?.payUrl) {
+             window.location.href = result.payUrl;
+           } else {
+     
+            setAlert({ variant: 'danger', message: 'Không nhận được liên kết thanh toán!' });
+           }
+    } catch (error) {
+  
+     setAlert({ variant: 'danger', message:  error.response?.data?.message || "Xóa bài viết thất bại!", });
+
     }
   };
   return (
