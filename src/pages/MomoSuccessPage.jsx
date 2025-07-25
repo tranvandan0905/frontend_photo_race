@@ -1,10 +1,8 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, Button } from "react-bootstrap";
-
 const MomoSuccessPage = () => {
   const navigate = useNavigate();
-
   useEffect(() => {
     // Có thể parse query tại đây nếu cần lấy thêm thông tin từ MoMo redirect
     const params = new URLSearchParams(window.location.search);

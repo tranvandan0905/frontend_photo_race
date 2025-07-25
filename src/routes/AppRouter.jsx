@@ -23,6 +23,13 @@ import BankingPage from "../pages/BankingPage";
 import MomoSuccessPage from "../pages/MomoSuccessPage";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
 import PaswordPage from "../pages/PaswordPage";
+import AddBankAccount from "../components/AddBankAccount";
+import MainLayoutAdmin from "../layouts/MainLayoutAdmin";
+import AdminStatistic from "../pages/AdminStatistic";
+import UserManagement from "../pages/UserManagement";
+import TopicManagement from "../pages/TopicManagement";
+import TransactionManagement from "../pages/TransactionManagement";
+import AdvertiserList from "../pages/AdvertiserManagement";
 
 
 function AppRoutes() {
@@ -35,6 +42,7 @@ function AppRoutes() {
         <Route path="/CreatePost" element={<CreatePost />} />
         <Route path="/SearchUser" element={<SearchUser />} />
         <Route path="/EditUserForm" element={<UserSettings />} />
+        <Route path="/STK" element={<AddBankAccount />} />
 
 
       </Route>
@@ -43,6 +51,13 @@ function AppRoutes() {
         <Route path="/statistical" element={<AdsList />} />
         <Route path="/ProfileAds" element={<ProfileAds />} />
         <Route path="/EditAdsFrom" element={<EditAdsForm />} />
+      </Route>
+      <Route element={<MainLayoutAdmin />}>
+        <Route path="/AdminStatistic" element={<AdminStatistic />} />
+        <Route path="/users" element={<UserManagement />} />
+        <Route path="/topicadmin" element={<TopicManagement />} />
+        <Route path="/dep-wit" element={<TransactionManagement />} />
+         <Route path="AdvertiserList" element={<AdvertiserList />} />
       </Route>
       {/* Route không dùng layout */}
       <Route path="/Topranking" element={<Topranking />} />

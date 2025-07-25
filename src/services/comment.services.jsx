@@ -8,7 +8,7 @@ export const postcommnet = async (submission_id,content) => {
     const response = await userAxios.post(`/comments`,{submission_id,content});
   return response;
 };
-export const deletecommnet = async (id) => {
+  export const deletecommnet = async (id) => {
     const response = await userAxios.delete(`/comments/${id}`);
   return response;
 };

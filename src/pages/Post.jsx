@@ -136,11 +136,15 @@ function Post(user_id) {
           setvotePosts(prev => ({ ...prev, [post._id]: true }));
         }
       } else {
-        const vote = await DeleteVoteSubmission(post._id);
-        if (!vote.data?.isVoted) {
-          setVoteCount(prev => ({ ...prev, [post._id]: vote.data.VoteCount }));
-          setvotePosts(prev => ({ ...prev, [post._id]: false }));
-        }
+        // const vote = await DeleteVoteSubmission(post._id);
+        // if (!vote.data?.isVoted) {
+        //   setVoteCount(prev => ({ ...prev, [post._id]: vote.data.VoteCount }));
+        //   setvotePosts(prev => ({ ...prev, [post._id]: true }));
+        // }
+         setAlert({
+        message:"Không thể xóa khi đã vote!",
+        variant: "danger"
+      });
       }
     } catch (error) {
       setAlert({

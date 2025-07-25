@@ -15,7 +15,6 @@ export const PostSub = async (data) => {
   return response;
 };
 export const deleteSub = async (id) => {
- console.log(id);
   const response = await userAxios.delete(`/submission/${id}`);
   return response;
 };

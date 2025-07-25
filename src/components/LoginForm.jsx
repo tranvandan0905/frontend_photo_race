@@ -14,18 +14,24 @@ function LoginForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-      const res = await Login(form.email, form.password); 
+      const res = await Login(form.email, form.password);
       if (res.token) {
         setAlert({ message: "Đăng nhập thành công!", variant: "success" });
+        if (res.role === "admin") {
           setTimeout(() => {
-          navigate('/', { state: { loggedIn: true } });
-        }, 3000);
+            navigate('/AdminStatistic');
+          }, 3000);
+        }
+        else {
+          setTimeout(() => {
+            navigate('/', { state: { loggedIn: true } });
+          }, 3000);
+        }
       }
-      else
-      {
-         setAlert({ message:res.message, variant: "success" });
+      else {
+        setAlert({ message: res.message, variant: "success" });
       }
     } catch (error) {
       setAlert({
@@ -67,14 +73,14 @@ function LoginForm() {
         </Button>
 
         <div className="text-center mt-3 mb-2">
-       
-             <Link to="/password" className="text-decoration-none">Quên mật khẩu</Link> 
+
+          <Link to="/password" className="text-decoration-none">Quên mật khẩu</Link>
         </div>
 
         <hr />
 
         <div className="text-center">
-           <Link to="/register" className="text-dark me-4"><Button variant="success" className="fw-bold px-4">Tạo tài khoản mới</Button></Link> 
+          <Link to="/register" className="text-dark me-4"><Button variant="success" className="fw-bold px-4">Tạo tài khoản mới</Button></Link>
         </div>
       </Form>
     </Card>

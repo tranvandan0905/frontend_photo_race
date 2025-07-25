@@ -10,7 +10,7 @@ function EmailVerifyForm() {
     e.preventDefault();
     try {
       const res = await emailpassword(email);
-      setAlert({ message: res.data.message, variant: "success" });
+      setAlert({ message: res.message, variant: "success" });
     } catch (error) {
       setAlert({
         message: error.response?.data?.message || error.message || "Có lỗi xảy ra!",

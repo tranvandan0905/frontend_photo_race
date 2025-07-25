@@ -52,7 +52,7 @@ function ProfileHeader() {
     if (!confirm) return;
 
     try {
-      await deleteUser(); 
+      await deleteUser();
       setAlert({
         message: "Vô hiệu hóa tài khoản thành công! Đang chuyển hướng...",
         variant: "success",
@@ -120,6 +120,11 @@ function ProfileHeader() {
                         <FaUserEdit className="me-1" /> Sửa
                       </Link>
                     </Button>
+                    <Button variant="outline-primary" as={Link} to="/STK" className="d-flex align-items-center gap-1">
+                      <FaUserEdit />
+                      <span>Liên kết</span>
+                    </Button>
+
                     <Button
                       variant="outline-danger"
                       onClick={handleDisableUser}

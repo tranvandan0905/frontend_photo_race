@@ -14,10 +14,9 @@ const TopPlayers = () => {
   const getTopranking = async () => {
     const listtopic = await GetTopranking();
     const newtoprank = await new_user_topranking();
-    const latest = listtopic?.data?.data;
+    const latest = listtopic.data;
     setAllTopranking(latest);
-    setUser_newtoprank(newtoprank.data?.data);
-    console.log(newtoprank.data.data)
+    setUser_newtoprank(newtoprank.data);
     if (Array.isArray(latest) && latest.length > 0) {
       const top3 = latest.slice(0, 3);
       setTopranking(top3);
@@ -62,7 +61,7 @@ const TopPlayers = () => {
                 <Card.Title className="fs-4 fw-bold">{topranking[0].user_name}</Card.Title>
                 <Card.Text>
                   <Badge bg="gold" className="mb-2">#1</Badge>
-                  <div>Tổng điểm: {topranking[0].totalScore}</div>
+                  <span >Tổng điểm: {topranking[0].totalScore}</span>
                 </Card.Text>
               </Card>
             )}

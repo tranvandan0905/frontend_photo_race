@@ -15,41 +15,52 @@ import {
   getDepositRequest,
   getWithdrawrequest,
 } from "../services/banking.services";
+import { findUserScore } from "../services/topranking.services";
 
 const BankingFrom = () => {
   const [active, setActive] = useState("deposit");
   const [depositAmount, setDepositAmount] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
-  const [bank, setBank] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
+  const [password, setTransactionPassword] = useState("");
   const [listDeposit, setListDeposit] = useState([]);
   const [listWithdraw, setListWithdraw] = useState([]);
+  const [listfindUserScore, setfindUserScore] = useState({});
   useEffect(() => {
     if (active === "history") {
       fetchDepositHistory();
       fetchWithdrawHistory();
+
     }
+    fetfindUserScore();
   }, [active]);
+  const fetfindUserScore = async () => {
+    try {
+          const res = await findUserScore();
+    setfindUserScore(res.data.totalScore);
+    } catch (error) {
+        alert(error.response?.data?.message || "thất bại!");
+    }
 
-const fetchDepositHistory = async () => {
-   try {
-  const res = await getDepositRequest();
-  setListDeposit(res?.data?.data || []);
-   } catch (error) {
- 
+  }
+  const fetchDepositHistory = async () => {
+    try {
+      const res = await getDepositRequest();
+      setListDeposit(res?.data?.data || []);
+    } catch (error) {
+
       alert(error.response?.data?.message || "thất bại!");
     }
-};
+  };
 
-const fetchWithdrawHistory = async () => {
-   try {
-  const res = await getWithdrawrequest();
-  setListWithdraw(res?.data?.data || []);
-   } catch (error) {
-   
+  const fetchWithdrawHistory = async () => {
+    try {
+      const res = await getWithdrawrequest();
+      setListWithdraw(res?.data?.data || []);
+    } catch (error) {
+
       alert(error.response?.data?.message || "thất bại!");
     }
-};
+  };
 
 
   const handleDeposit = async () => {
@@ -61,7 +72,7 @@ const fetchWithdrawHistory = async () => {
       }
 
       const result = await postDepositRequest({ xu });
-      console.log(result);
+
       if (result?.payUrl) {
         window.location.href = result.payUrl;
       } else {
@@ -75,23 +86,16 @@ const fetchWithdrawHistory = async () => {
 
   const handleWithdraw = async () => {
     try {
-      const amount = parseInt(withdrawAmount);
-      if (!amount || amount < 100000) {
-        alert("Số tiền rút tối thiểu là 100.000 VNĐ!");
+      const totalScore = parseInt(withdrawAmount);
+      if (!totalScore || totalScore < 10) {
+        alert("Số tiền rút tối thiểu là 10.000 VNĐ!");
         return;
       }
-      if (!bank || !accountNumber) {
-        alert("Vui lòng nhập đầy đủ ngân hàng và số tài khoản!");
-        return;
-      }
-
-      const result = await postWithdrawRequest({
-        bank,
-        accountNumber,
-        amount,
-      });
+      const result = await postWithdrawRequest(totalScore, password);
 
       alert(result?.message || "Yêu cầu rút tiền đã được gửi!");
+      setWithdrawAmount("");
+      setTransactionPassword("");
     } catch (error) {
       console.error("Lỗi rút tiền:", error);
       alert(error.response?.data?.message || "Rút tiền thất bại!");
@@ -108,7 +112,6 @@ const fetchWithdrawHistory = async () => {
   return (
     <div className="container mt-5">
       <Card className="shadow-lg p-4">
-        <h2 className="text-center text-primary mb-4">💰 Quản lý Giao Dịch</h2>
         <Row>
           <Col md={3} className="border-end">
             <Nav
@@ -158,31 +161,16 @@ const fetchWithdrawHistory = async () => {
             {active === "withdraw" && (
               <>
                 <h4 className="text-danger mb-3">🏦 Rút Tiền</h4>
-                <Form>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Chọn Ngân Hàng</Form.Label>
-                    <Form.Select
-                      value={bank}
-                      onChange={(e) => setBank(e.target.value)}
-                    >
-                      <option value="">-- Chọn ngân hàng --</option>
-                      <option value="vcb">Vietcombank</option>
-                      <option value="acb">ACB</option>
-                      <option value="mb">MB Bank</option>
-                      <option value="tpb">TPBank</option>
-                    </Form.Select>
-                  </Form.Group>
-
-                  <Form.Group className="mb-3">
-                    <Form.Label>Số tài khoản</Form.Label>
-                    <FormControl
-                      type="text"
-                      value={accountNumber}
-                      onChange={(e) => setAccountNumber(e.target.value)}
-                      placeholder="Nhập số tài khoản"
+                <Form >
+                  <InputGroup    style={{ backgroundColor: '#fff', width: '400px' }}> 
+                    <InputGroup.Text>Số tiền hiện có</InputGroup.Text>
+                    <Form.Control
+                      readOnly
+                      value={(listfindUserScore * 1000).toLocaleString('vi-VN')}
+                   
                     />
-                  </Form.Group>
-
+                    <InputGroup.Text>VNĐ</InputGroup.Text>
+                  </InputGroup>
                   <Form.Group className="mb-3">
                     <Form.Label>Số tiền cần rút</Form.Label>
                     <InputGroup>
@@ -196,6 +184,15 @@ const fetchWithdrawHistory = async () => {
                     </InputGroup>
                   </Form.Group>
 
+                  <Form.Group className="mb-3">
+                    <Form.Label>Mật khẩu giao dịch</Form.Label>
+                    <FormControl
+                      type="password"
+                      value={password}
+                      onChange={(e) => setTransactionPassword(e.target.value)}
+                      placeholder="Nhập mật khẩu giao dịch"
+                    />
+                  </Form.Group>
                   <div className="text-end">
                     <Button variant="danger" onClick={handleWithdraw}>
                       Rút Tiền
@@ -247,24 +244,22 @@ const fetchWithdrawHistory = async () => {
                               <td className="text-center">{index + 1}</td>
                               <td className="text-center">
                                 <span
-                                  className={`badge bg-${
-                                    item.type === "Nạp" ? "success" : "danger"
-                                  }`}
+                                  className={`badge bg-${item.type === "Nạp" ? "success" : "danger"
+                                    }`}
                                 >
                                   {item.type}
                                 </span>
                               </td>
-                              <td>{item.amount.toLocaleString()} VNĐ</td>
+                              <td>{(item.amount * 1000).toLocaleString('vi-VN')} VNĐ</td>
                               <td>{item.target}</td>
                               <td className="text-center">
                                 <span
-                                  className={`badge bg-${
-                                    item.status === "success"
-                                      ? "success"
-                                      : item.status === "pending"
+                                  className={`badge bg-${item.status === "success"
+                                    ? "success"
+                                    : item.status === "pending"
                                       ? "warning"
                                       : "danger"
-                                  }`}
+                                    }`}
                                 >
                                   {convertStatus(item.status)}
                                 </span>

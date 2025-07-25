@@ -38,7 +38,7 @@ function SidebarLeft() {
   };
   const getTopranking = async () => {
     const listtopic = await GetTopranking();
-    const latest = listtopic?.data?.data; // lấy danh sách từ response
+    const latest = listtopic.data; // lấy danh sách từ response
     if (Array.isArray(latest) && latest.length > 0) {
       const top5 = latest.slice(0, 3); // lấy 3 người đầu tiên
       setTopranking(top5);

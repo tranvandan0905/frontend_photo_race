@@ -39,7 +39,6 @@ function LoginAds() {
           style={{ minHeight: "500px" }}
         >
           <div className="w-100" style={{ maxWidth: "400px" }}>
-            <h3 className="text-center mb-4 text-dark">Đăng nhập Nhà Quảng Cáo</h3>
             <LoginAdsForm />
           </div>
         </Col>

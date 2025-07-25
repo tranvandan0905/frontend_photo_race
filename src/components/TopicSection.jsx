@@ -21,6 +21,7 @@ const TopicSection = () => {
 
   const getTopic = async () => {
     const listtopic = await GetTopic();
+    
     if (listtopic.length > 0) {
       const latest = listtopic.at(-1);
       setTopic(latest);

@@ -12,9 +12,9 @@ const TopRankingList = () => {
         const fetchToprank = async () => {
             try {
                 const res = await FindTopic_sub(topic_id);
-                setListTopranking(res.data.data);
+                console.log(res);
+               setListTopranking(res.slice(0, 3));
             } catch (err) {
-                console.error("Lỗi:", err);
                 setListTopranking([]);
             }
         };
@@ -48,7 +48,6 @@ const TopRankingList = () => {
 
             <Row xs={1} md={3} className="g-4">
                 {listtoprank
-                    .filter((item) => item !== null)
                     .map((item, index) => (
                         <Col key={index}>
                             <div

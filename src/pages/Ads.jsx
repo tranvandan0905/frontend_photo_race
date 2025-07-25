@@ -42,7 +42,6 @@ const handleSubmit = async (e) => {
   };
   return (
     <Card className="p-4 shadow" style={{ maxWidth: "600px", margin: "auto" }}>
-      <h4 className="mb-3">Tạo Quảng Cáo Mới</h4>
       {alert.message && <Alert variant={alert.variant}>{alert.message}</Alert>}
 
       <Form onSubmit={handleSubmit}>
