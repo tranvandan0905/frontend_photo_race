@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Container, Spinner, Badge, Button, ButtonGroup, Form, Row, Col } from 'react-bootstrap';
-import { FaUserShield, FaCoins, FaUser, FaCalendarAlt, FaSearch } from 'react-icons/fa';
+import { Table, Container, Spinner, Badge, Button, ButtonGroup, Form, Row, Col, Image, Card } from 'react-bootstrap';
+import { FaUserShield, FaCoins, FaCalendarAlt, FaSearch } from 'react-icons/fa';
 import { getFindNameUser, getUser } from '../services/user.services';
-
+import avatar from "../assets/avata.jpg";
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -45,11 +45,6 @@ const UserManagement = () => {
 
     return (
         <Container className="mt-5">
-            <div className="text-center mb-4">
-                <h3><FaUser /> Danh sách người dùng</h3>
-            </div>
-
-
             <Row className="align-items-center mb-3">
                 <Col md={8}>
                     <ButtonGroup>
@@ -84,38 +79,66 @@ const UserManagement = () => {
                     <Spinner animation="border" variant="primary" />
                 </div>
             ) : (
-                <Table striped bordered hover responsive>
-                    <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>Họ tên</th>
-                            <th><FaCoins /> Xu</th>
-                            <th><FaUserShield /> Vai trò</th>
-                            <th><FaCalendarAlt /> Ngày tạo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users.length === 0 ? (
-                            <tr>
-                                <td colSpan={5} className="text-center">Không có người dùng nào.</td>
-                            </tr>
-                        ) : (
-                            users.map((user) => (
-                                <tr key={user._id}>
-                                    <td>{user.email}</td>
-                                    <td>{user.name}</td>
-                                    <td>{user.xu?.toLocaleString('vi-VN') || 0} xu</td>
-                                    <td>
-                                        <Badge bg={user.role === 'admin' ? 'danger' : 'secondary'}>
-                                            {user.role}
-                                        </Badge>
-                                    </td>
-                                    <td>{new Date(user.created_at).toLocaleString('vi-VN')}</td>
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </Table>
+                <Card className="shadow-sm">
+                    <Card.Body>
+                        <h4>Danh sách người dùng</h4>
+                        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                            {/* Header cố định */}
+                            <Table striped bordered hover responsive className="mb-0">
+                                <thead className="table-header">
+                                    <tr>
+                                        <th>Avatar</th>
+                                        <th>Email</th>
+                                        <th>Họ tên</th>
+                                        <th><FaCoins /> Xu</th>
+                                        <th><FaUserShield /> Vai trò</th>
+                                        <th><FaCalendarAlt /> Ngày tạo</th>
+                                    </tr>
+                                </thead>
+
+
+                                {/* Phần tbody cuộn riêng */}
+
+
+                                <tbody>
+                                    {users.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={6} className="text-center">Không có người dùng nào.</td>
+                                        </tr>
+                                    ) : (
+                                        users.map((user) => (
+                                            <tr key={user._id}>
+                                                <td>
+                                                    <Col xs="auto">
+                                                        <Image
+                                                            src={user.image || avatar}
+                                                            roundedCircle
+                                                            width={54}
+                                                            height={54}
+                                                            className="me-3 border"
+                                                        />
+                                                    </Col>
+                                                </td>
+                                                <td>{user.email}</td>
+                                                <td>{user.name}</td>
+                                                <td>{user.xu?.toLocaleString('vi-VN') || 0} xu</td>
+                                                <td>
+                                                    <Badge bg={user.role === 'admin' ? 'danger' : 'secondary'}>
+                                                        {user.role}
+                                                    </Badge>
+                                                </td>
+                                                <td>{new Date(user.created_at).toLocaleString('vi-VN')}</td>
+                                            </tr>
+                                        ))
+                                    )}
+                                </tbody>
+
+
+                            </Table>
+                        </div>
+                    </Card.Body>
+                </Card>
+
             )}
         </Container>
     );

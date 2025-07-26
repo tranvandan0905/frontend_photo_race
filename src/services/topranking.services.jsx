@@ -15,3 +15,15 @@ export const findUserScore = async () => {
   const response = await userAxios.get(`/findUserScore`)
   return   response;
 };
+// Gửi 3 tham số như query string
+export const topranking = async (ranklike, rankcommnet, rankvote) => {
+  const response = await userAxios.get(`/topranking`, {
+    params: {
+      ranklike,
+      rankcommnet,
+      rankvote
+    }
+  });
+
+  return response;
+};

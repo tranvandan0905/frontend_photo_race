@@ -30,6 +30,7 @@ import UserManagement from "../pages/UserManagement";
 import TopicManagement from "../pages/TopicManagement";
 import TransactionManagement from "../pages/TransactionManagement";
 import AdvertiserList from "../pages/AdvertiserManagement";
+import RankingManager from "../pages/RankingManagement";
 
 
 function AppRoutes() {
@@ -57,7 +58,8 @@ function AppRoutes() {
         <Route path="/users" element={<UserManagement />} />
         <Route path="/topicadmin" element={<TopicManagement />} />
         <Route path="/dep-wit" element={<TransactionManagement />} />
-         <Route path="AdvertiserList" element={<AdvertiserList />} />
+        <Route path="AdvertiserList" element={<AdvertiserList />} />
+        <Route path="ranking" element={<RankingManager />} />
       </Route>
       {/* Route không dùng layout */}
       <Route path="/Topranking" element={<Topranking />} />

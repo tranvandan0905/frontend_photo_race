@@ -21,11 +21,11 @@ const TopicSection = () => {
 
   const getTopic = async () => {
     const listtopic = await GetTopic();
-    
-    if (listtopic.length > 0) {
-      const latest = listtopic.at(-1);
+
+    if (listtopic) {
+      const latest = listtopic.at(0);
       setTopic(latest);
-      setAllTopic(listtopic.slice(0, -1));
+      setAllTopic(listtopic.slice(1));
     }
   };
 
@@ -56,7 +56,7 @@ const TopicSection = () => {
   };
 
   const topicsToDisplay = () => {
-    if (keyword.trim() && findtopic.length > 0) return findtopic;
+    if (keyword.trim() && findtopic.trim()) return findtopic;
     return alltopic;
   };
 
@@ -152,9 +152,13 @@ const TopicSection = () => {
               </div>
             </div>
 
-            <Badge bg="light" text="dark" className="rounded-pill px-3 py-2 shadow-sm fs-6">
-              Đã kết thúc
-            </Badge>
+              {item.check ? (
+                <span className="badge bg-danger">Đã kết thúc</span>
+              ) : (
+                <span className="badge bg-success">Chưa kết thúc</span>
+              )}
+
+
           </ListGroup.Item>
         ))}
       </ListGroup>

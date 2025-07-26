@@ -12,93 +12,68 @@ const TopRankingList = () => {
         const fetchToprank = async () => {
             try {
                 const res = await FindTopic_sub(topic_id);
-                console.log(res);
-               setListTopranking(res.slice(0, 3));
+                setListTopranking(res);
             } catch (err) {
                 setListTopranking([]);
             }
         };
 
-        if (topic_id) {
-            fetchToprank();
-        }
+        if (topic_id) fetchToprank();
     }, [topic_id]);
 
     const getBadgeVariant = (index) => {
-        const colors = ["warning", "secondary", "info"];
+        const colors = ["danger", "secondary", "info"];
         return colors[index] || "dark";
     };
 
     return (
-        <Container className="mt-5">
-            <h2
-                className="text-center mb-5"
-                style={{
-                    fontSize: "36px",
-                    fontWeight: "bold",
-                    color: "#e67e22",
-                    textShadow: "2px 2px 5px rgba(0, 0, 0, 0.3)",
-                    fontFamily: "'Segoe UI', sans-serif",
-                    letterSpacing: "1px",
-                    marginTop: "100px",
-                }}
-            >
-                🏆 Top 3 Bài Dự Thi Đạt Giải 🏆
+        <Container className="py-5">
+            <h2 className="text-center mb-5 fw-bold text-warning" style={{ fontSize: "32px", textShadow: "1px 1px 3px rgba(0,0,0,0.2)" }}>
+                🏆 Top 3 Bài Dự Thi Xuất Sắc 🏆
             </h2>
 
-            <Row xs={1} md={3} className="g-4">
-                {listtoprank
-                    .map((item, index) => (
-                        <Col key={index}>
-                            <div
-                                className="position-relative"
-                                style={{
-                                    transition: "transform 0.3s ease",
-                                    cursor: "pointer",
-                                }}
+            <Row xs={1} md={3} className="g-4 justify-content-center">
+                {listtoprank.map((item, index) => (
+                    <Col key={index}>
+                        <div className="position-relative hover-scale">
+                            <Badge
+                                bg={getBadgeVariant(index)}
+                                className="position-absolute top-0 start-0 m-2 px-3 py-1 rounded-pill"
+                                style={{ fontSize: "0.85rem" }}
                             >
-                                {/* Badge góc trái */}
-                                <Badge
-                                    bg={getBadgeVariant(index)}
-                                    className="position-absolute"
-                                    style={{ top: "10px", left: "10px", fontSize: "0.9rem" }}
-                                >
-                                    TOP {index + 1}
-                                </Badge>
+                                TOP {index + 1}
+                            </Badge>
 
-                                <Card
-                                    className="shadow"
-                                    style={{
-                                        borderRadius: "15px",
-                                        overflow: "hidden",
-                                        boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
-                                    }}
-                                >
-                                    <Card.Img
-                                        variant="top"
-                                        src={item.submission.image}
-                                        alt={item.submission.title}
-                                        style={{ height: "250px", objectFit: "cover" }}
-                                    />
-                                    <Card.Body>
-                                        <Card.Title
-                                            style={{
-                                                fontSize: "24px",
-                                                fontWeight: "600",
-                                                color: "#2c3e50",
-                                            }}
-                                        >
-                                            {item.submission.title}
-                                        </Card.Title>
-                                        <Card.Text style={{ fontSize: "18px" }}>
-                                            <strong>Điểm:</strong> {item.topranking.total_score}
-                                        </Card.Text>
-                                    </Card.Body>
-                                </Card>
-                            </div>
-                        </Col>
-                    ))}
+                            <Card className="shadow-sm border-0" style={{ borderRadius: "12px" }}>
+                                <Card.Img
+                                    variant="top"
+                                    src={item.submission.image}
+                                    alt={item.submission.title}
+                                    style={{ height: "200px", objectFit: "cover" }}
+                                />
+                                <Card.Body className="text-center">
+                                    <Card.Title className="fw-semibold" style={{ fontSize: "20px", color: "#34495e" }}>
+                                        {item.submission.title}
+                                    </Card.Title>
+                                    <Card.Text style={{ fontSize: "16px", color: "#555" }}>
+                                        <strong>Điểm:</strong> {item.topranking.total_score}
+                                    </Card.Text>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                    </Col>
+                ))}
             </Row>
+
+            {/* Hover animation */}
+            <style>{`
+                .hover-scale {
+                    transition: transform 0.3s ease-in-out;
+                }
+                .hover-scale:hover {
+                    transform: scale(1.03);
+                }
+            `}</style>
         </Container>
     );
 };
