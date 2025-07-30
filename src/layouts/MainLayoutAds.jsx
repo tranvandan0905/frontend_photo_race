@@ -11,7 +11,6 @@ function MainLayoutAds() {
         <Col xs={12} md={3} lg={2} className="bg-light p-0 border-end">
           <NavbarAds />
         </Col>
-
         {/* Nội dung chính */}
         <Col xs={12} md={9} lg={10} className="p-4 overflow-auto" style={{ maxHeight: "100vh" }}>
           <Outlet />

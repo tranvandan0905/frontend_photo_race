@@ -6,7 +6,7 @@ import avatar from "../assets/avata.jpg";
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [filter, setFilter] = useState(null); // null | "delete" | "role"
+    const [filter, setFilter] = useState(null); 
     const [searchName, setSearchName] = useState('');
 
     useEffect(() => {
@@ -20,7 +20,7 @@ const UserManagement = () => {
     const fetchUsers = async (check = null) => {
         setLoading(true);
         try {
-            const res = await getUser(check); // truyền check lên API
+            const res = await getUser(check); 
             setUsers(res.data || []);
         } catch (err) {
             console.error("Lỗi khi lấy dữ liệu người dùng:", err);

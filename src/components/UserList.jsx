@@ -20,7 +20,8 @@ const SearchUser = () => {
       setLoading(true);
       try {
         const res = await getFindNameUser(name);
-        setUsers(res.data); 
+        console.log(res)
+        setUsers(res.data);
       } catch (err) {
         console.error("Lỗi khi tìm user:", err);
         setUsers([]);
@@ -34,24 +35,41 @@ const SearchUser = () => {
   return (
     <div className="mb-3 mt-5">
       {loading && <Spinner animation="border" />}
-      
-      {/* Hiển thị danh sách người dùng */}
-      {!loading && users.length > 0 && (
+      {!loading && users!=null && (
         <ListGroup className="mt-2">
           {users.map((user) => (
-            <ListGroup.Item key={user._id} className="d-flex align-items-center">
-              <Image src={user.image || avatar} roundedCircle width={40} height={40} className="me-2" />
-              <Link  to={`/profile/?name=${user._id}`} className="text-decoration-none"> <span>{user.name} </span></Link>
+            <ListGroup.Item
+              key={user._id}
+              className="d-flex align-items-center justify-content-between"
+            >
+              <div className="d-flex align-items-center">
+                <Image
+                  src={user.image || avatar}
+                  roundedCircle
+                  width={40}
+                  height={40}
+                  className="me-2"
+                />
+                <Link
+                  to={`/SearchUserPage/?name=${user._id}`}
+                  className="text-decoration-none"
+                >
+                  <span>{user.name}</span>
+                </Link>
+              </div>
             </ListGroup.Item>
           ))}
         </ListGroup>
       )}
-      {!loading && users.length === 0 && (
-         <Card className="mb-3 mt-5">
-        <p className="mt-3 text-muted text-center">Không tìm thấy người dùng nào.</p>
+
+      {!loading && users==null && (
+        <Card className="mb-3 mt-5">
+          <p className="mt-3 text-muted text-center">
+            Không tìm thấy người dùng nào.
+          </p>
         </Card>
       )}
-     </div>
+    </div>
   );
 };
 

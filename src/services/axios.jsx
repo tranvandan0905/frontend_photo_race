@@ -47,3 +47,21 @@ userAxios.interceptors.response.use(
   (response) => response.data,
   handleResponseError
 );
+
+// Instance cho chat
+export const chatAxios = axios.create({
+  baseURL: "http://localhost:3012/api/chat",
+});
+
+chatAxios.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+chatAxios.interceptors.response.use(
+  (response) => response.data,
+  handleResponseError
+);

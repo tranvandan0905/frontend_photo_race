@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form, Button, Card, Container, Image, Alert } from 'react-bootstrap';
+import { Form, Button, Card, Container, Image, Alert, Row, Col } from 'react-bootstrap';
 import { Updateavatar } from '../services/user.services';
 
 const EditAvatarForm = () => {
@@ -37,31 +37,35 @@ const EditAvatarForm = () => {
   };
 
   return (
-    <Container className="mt-5">
-      <Card className="p-4 shadow">
-        <h4 className="mb-4 text-center">Cập nhật ảnh đại diện</h4>
+    <Container className="my-5">
+      <Row className="justify-content-center">
+        <Col md={6}>
+          <Card className="p-4 shadow-sm rounded-4">
+            <h4 className="mb-4 text-center">Cập nhật ảnh đại diện</h4>
 
-        {alert.message && <Alert variant={alert.variant}>{alert.message}</Alert>}
+            {alert.message && <Alert variant={alert.variant}>{alert.message}</Alert>}
 
-        <Form onSubmit={handleSubmit}>
-          <Form.Group controlId="formAvatar" className="mb-3">
-            <Form.Label>Ảnh đại diện</Form.Label>
-            <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
+            <Form onSubmit={handleSubmit}>
+              <Form.Group controlId="formAvatar" className="mb-3">
+                <Form.Label>Chọn ảnh mới</Form.Label>
+                <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
+              </Form.Group>
 
-            {previewUrl && (
-              <div className="mt-3">
-                <Image src={previewUrl} alt="Avatar Preview" thumbnail width={120} />
+              {previewUrl && (
+                <div className="text-center mb-3">
+                  <Image src={previewUrl} alt="Avatar Preview" roundedCircle width={120} height={120} />
+                </div>
+              )}
+
+              <div className="d-grid">
+                <Button variant="primary" type="submit">
+                  Cập nhật ảnh
+                </Button>
               </div>
-            )}
-          </Form.Group>
-
-          <div className="d-grid">
-            <Button variant="primary" type="submit">
-              Cập nhật ảnh
-            </Button>
-          </div>
-        </Form>
-      </Card>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
     </Container>
   );
 };

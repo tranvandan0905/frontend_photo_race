@@ -27,3 +27,11 @@ export const findLike    = async (submission_id) => {
   const response = await userAxios.get(`/likes/check/${submission_id}`)
   return response;
 };
+export const sumvoteSub    = async (topic_id) => {
+  const response = await userAxios.get(`/sumvoteSub/${topic_id}`)
+  return response;
+};
+export const sumvotetopic    = async (topic_id) => {
+  const response = await userAxios.get(`/sumvotetopic/${topic_id}`)
+  return response;
+};

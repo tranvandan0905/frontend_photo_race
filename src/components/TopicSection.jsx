@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { GetTopic, FindTopic } from '../services/topic.services';
 import { PostVoteTopic } from '../services/interaction.services';
 import { Link } from 'react-router-dom';
+import AlertToast from './AlertToast';
 
 const TopicSection = () => {
   const [topic, setTopic] = useState({});
@@ -64,37 +65,50 @@ const TopicSection = () => {
     <Container className="container-xl mt-5">
       {/* Chủ đề hiện tại */}
       <Card
-        className="mb-5 shadow border-0 rounded-4 px-5 py-4"
+        className="mb-5 shadow-sm border-0 rounded-4 px-4 py-4"
         style={{
-          background: "linear-gradient(to right, #fdfbfb, #ebedee)",
-          borderLeft: "6px solid #007bff"
+          background: "linear-gradient(135deg, #f8f9fa, #e9ecef)",
+          borderLeft: "6px solid #0d6efd",
         }}
       >
         <Card.Body className="d-flex flex-column align-items-center text-center">
           <Card.Title
-            className="fs-2 fw-bold text-primary mb-3"
-            style={{ letterSpacing: '1px' }}
+            className="fs-3 fw-bold text-primary mb-3"
+            style={{ letterSpacing: "0.5px" }}
           >
-            🎯 Chủ đề tuần này: {topic.title || "Chưa có chủ đề"}
+            🎯 Chủ đề tuần này:{" "}
+            <span className="text-dark">
+              {topic.title || "Chưa có chủ đề"}
+            </span>
           </Card.Title>
 
           <div className="text-secondary mb-4 fs-5">
-            <FaClock className="me-2 text-primary" />
-            Bắt đầu: <strong>{new Date(topic.start_time).toLocaleString()}</strong>
-            <br />
-            <FaClock className="me-2 text-danger" />
-            Kết thúc: <strong>{new Date(topic.end_time).toLocaleString()}</strong>
+            <div className="mb-2">
+              <FaClock className="me-2 text-success" />
+              Bắt đầu:{" "}
+              <strong className="text-dark">
+                {new Date(topic.start_time).toLocaleString()}
+              </strong>
+            </div>
+            <div>
+              <FaClock className="me-2 text-danger" />
+              Kết thúc:{" "}
+              <strong className="text-dark">
+                {new Date(topic.end_time).toLocaleString()}
+              </strong>
+            </div>
           </div>
 
           <Button
             variant="primary"
-            className="rounded-pill px-5 py-2 fw-semibold shadow-sm fs-5"
+            className="rounded-pill px-4 py-2 fw-semibold shadow fs-5"
             onClick={handClipVoteTopic}
           >
             🚀 Vote chủ đề này
           </Button>
         </Card.Body>
       </Card>
+
 
       {/* Header + form tìm kiếm */}
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -152,11 +166,11 @@ const TopicSection = () => {
               </div>
             </div>
 
-              {item.check ? (
-                <span className="badge bg-danger">Đã kết thúc</span>
-              ) : (
-                <span className="badge bg-success">Chưa kết thúc</span>
-              )}
+            {item.check ? (
+              <span className="badge bg-danger">Đã kết thúc</span>
+            ) : (
+              <span className="badge bg-success">Chưa kết thúc</span>
+            )}
 
 
           </ListGroup.Item>
@@ -164,24 +178,7 @@ const TopicSection = () => {
       </ListGroup>
 
       {/* Thông báo nổi (toast) */}
-      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
-        <Toast
-          bg={alert.variant === 'success' ? 'success' : 'danger'}
-          onClose={() => setAlert({ ...alert, message: null })}
-          show={!!alert.message}
-          delay={3000}
-          autohide
-        >
-          <Toast.Header>
-            <strong className="me-auto">
-              {alert.variant === 'success' ? '✅ Thành công' : '❌ Lỗi'}
-            </strong>
-          </Toast.Header>
-          <Toast.Body className="text-white">
-            {alert.message}
-          </Toast.Body>
-        </Toast>
-      </ToastContainer>
+      <AlertToast alert={alert} setAlert={setAlert} />
     </Container>
   );
 };

@@ -14,7 +14,8 @@ import {
 } from 'react-bootstrap';
 import { GetTopic, FindTopic, createtopic, updatetopic } from '../services/topic.services';
 import { toast } from 'react-toastify';
-import { FindTopic_sub, topranking } from '../services/topranking.services';
+import { FindTopic_sub, sumtotalscore, topranking } from '../services/topranking.services';
+import { sumvoteSub, sumvotetopic } from '../services/interaction.services';
 
 const TopicManagement = () => {
   const [topics, setTopics] = useState([]);
@@ -24,6 +25,10 @@ const TopicManagement = () => {
   const [showtoprankModal, setShowtoprankModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingTopic, setEditingTopic] = useState(null);
+  const [showDoanhthu, setShowDoanhthu] = useState(false);
+  const [sumsub, setsumssub] = useState(null);
+    const [sumtoprank, setsumtoprank] = useState(null);
+  const [sumtopic, setsumtopic] = useState(null);
   const [Showtop3Modal, setShowtop3Modal] = useState(false);
   const [listtoprank, setListTopranking] = useState([]);
   const [alert, setAlert] = useState({ message: null, variant: "danger" });
@@ -116,6 +121,21 @@ const TopicManagement = () => {
     if (!endTime) return false;
     return new Date(endTime) < new Date();
   };
+  const sumtopranking = async (topic_id) => {
+    try {
+      const sub = await sumvoteSub(topic_id);
+      const topic = await sumvotetopic(topic_id);
+       const toprank = await sumtotalscore(topic_id);
+      setsumtoprank(toprank.data)
+      setsumssub(sub.data);
+      setsumtopic(topic.data);
+
+      setShowDoanhthu(true)
+    } catch (error) {
+      console.error("Lỗi cập nhật:", error);
+    }
+  };
+
 
   useEffect(() => {
     fetchAllTopics();
@@ -209,7 +229,10 @@ const TopicManagement = () => {
                           )}
 
                           {ended && (
-                            <Button variant="warning" size="sm">
+                            <Button variant="warning" size="sm"
+                             onClick={() => {
+                                sumtopranking(topic._id);
+                              }}>
                               Xem doanh thu
                             </Button>
                           )}
@@ -220,10 +243,10 @@ const TopicManagement = () => {
                               size="sm"
                               onClick={() => {
                                 handletop3Topic(topic._id);
-                                setShowtop3Modal(true);
+                               
                               }}
                             >
-                               Xem top hạng
+                              Xem top hạng
                             </Button>
                           ) : (
                             <Button
@@ -403,6 +426,7 @@ const TopicManagement = () => {
             </Button>
           </Modal.Footer>
         </Modal>
+        {/*toprank topic  */}
         <Modal
           show={Showtop3Modal}
           onHide={() => setShowtop3Modal(false)}
@@ -418,7 +442,7 @@ const TopicManagement = () => {
               {listtoprank.map((item, index) => (
                 <Col key={index}>
                   <Card className="p-3 shadow-sm rounded-4 h-100">
-                   
+
 
                     <Form>
                       <Form.Group className="mb-2">
@@ -460,7 +484,41 @@ const TopicManagement = () => {
             </Row>
           </Modal.Body>
         </Modal>
+        {/*Doanh thu  */}
 
+       <Modal
+  show={showDoanhthu}
+  onHide={() => setShowDoanhthu(false)}
+  centered
+  dialogClassName="modal-lg"
+>
+  <Modal.Header closeButton>
+    <Modal.Title className="fw-bold text-primary">
+      💰 Thống kê doanh thu
+    </Modal.Title>
+  </Modal.Header>
+
+  <Modal.Body className="px-4 py-3">
+    <div className="d-flex flex-column gap-3 fs-5">
+      <div className="d-flex justify-content-between">
+        <span className="fw-semibold text-secondary">Tổng chi (Trao thưởng):</span>
+        <span className="text-danger fw-bold">{(sumtoprank*1000).toLocaleString()} đ</span>
+      </div>
+
+      <div className="d-flex justify-content-between">
+        <span className="fw-semibold text-secondary">Tổng thu (Lượt Vote):</span>
+        <span className="text-success fw-bold">{((sumsub * 5 + sumtopic * 5)*1000).toLocaleString()} đ</span>
+      </div>
+
+      <div className="border-top pt-3 d-flex justify-content-between">
+        <span className="fw-semibold text-dark">Doanh thu:</span>
+        <span className="fw-bold text-primary">
+          {((sumsub * 5 + sumtopic * 5 - sumtoprank)*1000).toLocaleString()} đ
+        </span>
+      </div>
+    </div>
+  </Modal.Body>
+</Modal>
 
       </Container >
     </>);

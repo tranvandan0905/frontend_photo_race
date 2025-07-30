@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Card, Button, Image, Spinner,
-  Toast, ToastContainer
 } from "react-bootstrap";
 import { FaThumbsUp, FaComment, FaStar, FaTimes } from "react-icons/fa";
 import { deleteSub, getAllPost } from "../services/submission.services";
@@ -11,9 +10,10 @@ import {
 } from "../services/comment.services";
 import {
   PostLike, DeleteLike, PostVoteSubmission,
-  findVoteSub, findLike, DeleteVoteSubmission
+  findVoteSub, findLike
 } from "../services/interaction.services";
 import avatar from "../assets/avata.jpg";
+import AlertToast from "../components/AlertToast";
 
 function Post(user_id) {
   const [posts, setPosts] = useState([]);
@@ -46,7 +46,7 @@ function Post(user_id) {
             initLikeCount[p._id] = p.like;
             initCommentCount[p._id] = p.comment;
             initVoteCount[p._id] = p.vote;
-              if (currentUserId) {
+            if (currentUserId) {
               const resLike = await findLike(p._id);
               likedStatusMap[p._id] = resLike?.check || false;
 
@@ -136,15 +136,11 @@ function Post(user_id) {
           setvotePosts(prev => ({ ...prev, [post._id]: true }));
         }
       } else {
-        // const vote = await DeleteVoteSubmission(post._id);
-        // if (!vote.data?.isVoted) {
-        //   setVoteCount(prev => ({ ...prev, [post._id]: vote.data.VoteCount }));
-        //   setvotePosts(prev => ({ ...prev, [post._id]: true }));
-        // }
-         setAlert({
-        message:"Không thể xóa khi đã vote!",
-        variant: "danger"
-      });
+
+        setAlert({
+          message: "Không thể xóa khi đã vote!",
+          variant: "danger"
+        });
       }
     } catch (error) {
       setAlert({
@@ -206,7 +202,7 @@ function Post(user_id) {
     <>
       {posts.map(post => (
 
-        <Card key={post._id}  className="mb-3 shadow-sm position-relative">
+        <Card key={post._id} className="mb-3 shadow-sm position-relative">
 
           <Button
             variant="link"
@@ -339,23 +335,7 @@ function Post(user_id) {
           </Card.Body>
         </Card>
       ))}
-
-      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 9999 }}>
-        <Toast
-          bg={alert.variant === 'success' ? 'success' : 'danger'}
-          onClose={() => setAlert({ ...alert, message: null })}
-          show={!!alert.message}
-          delay={3000}
-          autohide
-        >
-          <Toast.Header>
-            <strong className="me-auto">
-              {alert.variant === 'success' ? '✅ Thành công' : '❌ Lỗi'}
-            </strong>
-          </Toast.Header>
-          <Toast.Body className="text-white">{alert.message}</Toast.Body>
-        </Toast>
-      </ToastContainer>
+      <AlertToast alert={alert} setAlert={setAlert} />
     </>
   );
 }

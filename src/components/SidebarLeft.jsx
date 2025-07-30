@@ -6,6 +6,7 @@ import { PostVoteTopic } from "../services/interaction.services";
 import { useEffect, useState } from "react";
 import { GetTopic } from "../services/topic.services";
 import { GetTopranking } from "../services/topranking.services";
+import AlertToast from "./AlertToast";
 function SidebarLeft() {
   const [topic, setTopic] = useState({});
   const [topranking, setTopranking] = useState([]);
@@ -75,7 +76,6 @@ function SidebarLeft() {
 
       <ListGroup variant="flush">
         {/* Chủ đề tuần này */}
-        {alert.message && <Alert variant={alert.variant}>{alert.message}</Alert>}
         <ListGroup.Item
           className="d-flex align-items-start px-4 py-3 border-0 shadow-sm rounded-4 mb-3"
           style={{
@@ -139,7 +139,9 @@ function SidebarLeft() {
           ))}
         </ListGroup.Item>
       </ListGroup>
+      <AlertToast alert={alert} setAlert={setAlert} />
     </Card>
+    
   );
 }
 

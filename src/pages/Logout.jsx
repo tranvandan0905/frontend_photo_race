@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { disconnectSocket } from '../services/chat.services';
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -7,6 +8,8 @@ const Logout = () => {
   useEffect(() => {
 
     localStorage.removeItem('token');
+    disconnectSocket();
+
     navigate('/');
   }, [navigate]);
 

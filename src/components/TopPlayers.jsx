@@ -4,9 +4,11 @@ import { GetTopranking, new_user_topranking } from '../services/topranking.servi
 import avatar from "../assets/avata.jpg";
 
 const TopPlayers = () => {
+  const userId = localStorage.getItem("user_id");
   const [topranking, setTopranking] = useState([]);
   const [alltopranking, setAllTopranking] = useState([]);
   const [user_newtoprank, setUser_newtoprank] = useState([]);
+  const [user, setUser] = useState({});
   useEffect(() => {
     getTopranking();
   }, []);
@@ -15,6 +17,14 @@ const TopPlayers = () => {
     const listtopic = await GetTopranking();
     const newtoprank = await new_user_topranking();
     const latest = listtopic.data;
+    for (const p of latest) {
+      console.log(p,"user",userId)
+      if (p.user_id === userId) {
+        setUser(p)
+        break;
+      }
+    }
+    
     setAllTopranking(latest);
     setUser_newtoprank(newtoprank.data);
     if (Array.isArray(latest) && latest.length > 0) {
@@ -26,7 +36,7 @@ const TopPlayers = () => {
   return (
     <Card className="mb-4 shadow-sm border-0 rounded-4 p-4">
       <Card.Body>
-        <Card.Title className="fs-4 fw-bold text-center mb-4">Bảng xếp hạng Top người chơi</Card.Title>
+        <Card.Title className="fs-4 fw-bold text-center mb-4">Bạn có tổng điểm là : {user.totalScore}</Card.Title>
 
         {/* Top 3 layout */}
         <Row className="d-flex justify-content-center mb-5">
@@ -111,6 +121,7 @@ const TopPlayers = () => {
           <Col md={6}>
             <h5 className="fw-bold mb-3">📋 Danh sách xếp hạng đầy đủ</h5>
             {alltopranking.length > 0 ? (
+
               <ListGroup variant="flush" style={{ maxHeight: '300px', overflowY: 'auto' }}>
                 {alltopranking.map((user, index) => (
                   <ListGroup.Item key={index} className="d-flex align-items-center gap-3">

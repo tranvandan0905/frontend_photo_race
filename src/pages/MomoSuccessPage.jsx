@@ -1,17 +1,8 @@
-import React, { useEffect } from "react";
+
 import { useNavigate } from "react-router-dom";
 import { Card, Button } from "react-bootstrap";
 const MomoSuccessPage = () => {
   const navigate = useNavigate();
-  useEffect(() => {
-    // Có thể parse query tại đây nếu cần lấy thêm thông tin từ MoMo redirect
-    const params = new URLSearchParams(window.location.search);
-    const orderId = params.get("orderId");
-    const message = params.get("message");
-
-    console.log("MoMo return params:", { orderId, message });
-  }, []);
-
   return (
     <div className="container mt-5 d-flex justify-content-center">
       <Card className="shadow-lg p-5 text-center" style={{ maxWidth: "500px" }}>

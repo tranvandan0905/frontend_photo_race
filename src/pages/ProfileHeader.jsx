@@ -15,24 +15,23 @@ import {
   FaUserEdit,
   FaBan,
   FaUser,
+  FaImages,
+  FaUserFriends,
 } from "react-icons/fa";
 import { getAllUser, deleteUser } from "../services/user.services";
 import avatar from "../assets/avata.jpg";
-import Post from "../pages/Post";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function ProfileHeader() {
   const [user, setuser] = useState([]);
   const [loading, setLoading] = useState(true);
   const [alert, setAlert] = useState({ message: null, variant: "danger" });
-  const [searchParams] = useSearchParams();
-  const user_id = searchParams.get("name");
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getAllUser(user_id);
+        const res = await getAllUser();
         setuser(res.data);
         setLoading(false);
       } catch (error) {
@@ -43,7 +42,7 @@ function ProfileHeader() {
       }
     };
     fetchData();
-  }, [user_id]);
+  }, []);
 
   const handleDisableUser = async () => {
     const confirm = window.confirm(
@@ -80,70 +79,79 @@ function ProfileHeader() {
   return (
     <>
       {alert.message && <Alert variant={alert.variant}>{alert.message}</Alert>}
-      <Card className="mb-4 shadow-sm rounded-3">
+      <Card className="mb-4 shadow-sm rounded-4 p-3">
         {!alert.message && user && (
           <Card.Body>
-            <Row className="align-items-center">
-              <Col xs="auto">
+            <Row className="justify-content-center text-center align-items-center">
+              <Col xs={12} md="auto" className="mb-3 mb-md-0">
                 <Image
                   src={user.image || avatar}
                   roundedCircle
-                  width={64}
-                  height={64}
-                  className="me-3 border"
+                  width={100}
+                  height={100}
+                  className="border shadow-sm"
                 />
               </Col>
-              <Col>
-                <h5 className="mb-1">
-                  <FaUser className="me-2 text-primary" />
+              <Col xs={12} md={8}>
+                <h4 className="fw-bold text-primary text-capitalize">
+                  <FaUser className="me-2" />
                   {user.name}
-                </h5>
-                {!user_id && (
-                  <p className="mb-1 text-muted">
-                    <FaEnvelope className="me-2 text-secondary" />
-                    {user.email}
-                  </p>
-                )}
-                <p className="mb-0 text-warning fw-semibold">
+                </h4>
+                <p className="mb-1 text-muted">
+                  <FaEnvelope className="me-2" />
+                  {user.email}
+                </p>
+                <p className="text-warning fw-semibold">
                   <FaCoins className="me-2" />
                   {user.xu} xu
                 </p>
-              </Col>
-              <Col xs={12} className="d-flex justify-content-center mt-3">
-                {!user_id && (
-                  <ButtonGroup>
-                    <Button variant="outline-primary">
-                      <Link
-                        to="/EditUserForm"
-                        className="text-dark d-flex align-items-center text-decoration-none"
-                      >
-                        <FaUserEdit className="me-1" /> Sửa
-                      </Link>
-                    </Button>
-                    <Button variant="outline-primary" as={Link} to="/STK" className="d-flex align-items-center gap-1">
-                      <FaUserEdit />
-                      <span>Liên kết</span>
-                    </Button>
 
-                    <Button
-                      variant="outline-danger"
-                      onClick={handleDisableUser}
-                    >
-                      <FaBan className="me-1" /> Vô hiệu hóa
-                    </Button>
-                  </ButtonGroup>
-                )}
+                <ButtonGroup className="d-flex flex-wrap justify-content-center gap-2 mt-3">
+                  <Button
+                    variant="outline-success"
+                    as={Link}
+                    to="/profile"
+                    className="d-flex align-items-center gap-2"
+                  >
+                    <FaImages /> Bài đăng
+                  </Button>
+                  <Button
+                    variant="outline-info"
+                    as={Link}
+                    to="/EditUserForm"
+                    className="d-flex align-items-center gap-2"
+                  >
+                    <FaUserEdit /> Chỉnh sửa
+                  </Button>
+                  <Button
+                    variant="outline-secondary"
+                    as={Link}
+                    to="/STK"
+                    className="d-flex align-items-center gap-2"
+                  >
+                    <FaUserEdit /> Liên kết STK
+                  </Button>
+                  <Button
+                    variant="outline-danger"
+                    onClick={handleDisableUser}
+                    className="d-flex align-items-center gap-2"
+                  >
+                    <FaBan /> Vô hiệu hóa
+                  </Button>
+                  <Button
+                    variant="outline-primary"
+                    as={Link}
+                    to="/FriendList"
+                    className="d-flex align-items-center gap-2"
+                  >
+                    <FaUserFriends /> Bạn bè
+                  </Button>
+                </ButtonGroup>
               </Col>
             </Row>
           </Card.Body>
         )}
       </Card>
-
-      {user ? (
-        <Post user_id={user._id} />
-      ) : (
-        <p>Đang tải thông tin người dùng...</p>
-      )}
     </>
   );
 }

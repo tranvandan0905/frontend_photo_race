@@ -6,7 +6,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import CreatePost from "../components/CreatePost";
 import SearchUser from "../components/UserList";
-import ProfileHeader from "../components/ProfileHeader";
+import ProfileHeader from "../pages/ProfileHeader";
 import Logout from "../pages/Logout";
 import Topic from "../pages/Topic";
 import Post from "../pages/Post";
@@ -31,6 +31,11 @@ import TopicManagement from "../pages/TopicManagement";
 import TransactionManagement from "../pages/TransactionManagement";
 import AdvertiserList from "../pages/AdvertiserManagement";
 import RankingManager from "../pages/RankingManagement";
+import ChatPage from "../pages/ChatPage";
+import MainLayoutUser from "../layouts/MainLayoutUser";
+import SearchUserPage from "../pages/SearchUserPage";
+import PostProfile from "../pages/PostProfile";
+import FriendList from "../components/FriendList";
 
 
 function AppRoutes() {
@@ -39,11 +44,10 @@ function AppRoutes() {
       {/* Các route dùng layout */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<Post />} />
-        <Route path="/profile" element={<ProfileHeader />} />
         <Route path="/CreatePost" element={<CreatePost />} />
         <Route path="/SearchUser" element={<SearchUser />} />
-        <Route path="/EditUserForm" element={<UserSettings />} />
-        <Route path="/STK" element={<AddBankAccount />} />
+        <Route path="/SearchUserPage" element={<SearchUserPage />} />
+        <Route path="/chat" element={<ChatPage />} />
 
 
       </Route>
@@ -61,6 +65,13 @@ function AppRoutes() {
         <Route path="AdvertiserList" element={<AdvertiserList />} />
         <Route path="ranking" element={<RankingManager />} />
       </Route>
+      <Route element={<MainLayoutUser />}>
+        <Route path="/profile" element={<PostProfile />} />
+        <Route path="/EditUserForm" element={<UserSettings />} />
+        <Route path="/STK" element={<AddBankAccount />} />
+         <Route path="/FriendList" element={<FriendList />}/>
+      </Route>
+
       {/* Route không dùng layout */}
       <Route path="/Topranking" element={<Topranking />} />
       <Route path="/Topic" element={<Topic />} />

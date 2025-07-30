@@ -20,12 +20,12 @@ const AdminStatistic = () => {
             const withdrawRes = await getPostWithdrawRequestCountByDateRange({ startDate, endDate });
             const userRes = await getPostUserCountByDateRange({ startDate, endDate });
             const subRes = await getPostCountByDateRange({ startDate, endDate });
-
+            console.log(withdrawRes)
             setResults({
-                deposit: depositRes.data, // { totalAmount, totalCount }
-                withdraw: withdrawRes.data, // { pending, success, contact_support }
-                users: userRes.data,       // number
-                posts: subRes.data         // number
+                deposit: depositRes.data,
+                withdraw: withdrawRes.data,
+                users: userRes.data,
+                posts: subRes.data
             });
         } catch (error) {
             console.error("Lỗi thống kê:", error);
@@ -33,34 +33,38 @@ const AdminStatistic = () => {
     };
 
     return (
-        <Container className="mt-4">
-            <Card className="p-4 shadow">
-                <div className="text-center mb-4">
-                    <h4 className="mb-3 text-primary fw-bold">📊 Thống kê dữ liệu hệ thống</h4>
-                </div>
-                <Row className="mb-3">
-                    <Col md={4}>
-                        <Form.Label>Ngày bắt đầu</Form.Label>
-                        <Form.Control
-                            type="date"
-                            value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
-                        />
-                    </Col>
-                    <Col md={4}>
-                        <Form.Label>Ngày kết thúc</Form.Label>
-                        <Form.Control
-                            type="date"
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
-                        />
-                    </Col>
-                </Row>
+        <Container>
+            <Container className="d-flex justify-content-center ">
+                <Card className="p-4 shadow w-50 ">
+                    <div className="text-center mb-4">
+                        <h4 className="mb-3 text-primary fw-bold">📊 Thống kê dữ liệu hệ thống</h4>
+                    </div>
 
-                <Button onClick={handleStatistic} className="w-100 mt-2" variant="primary">
-                    Thống kê
-                </Button>
-            </Card>
+                    <Row className="mb-3">
+                        <Col md={12} className="mb-3">
+                            <Form.Label>Ngày bắt đầu</Form.Label>
+                            <Form.Control
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                            />
+                        </Col>
+                        <Col md={12}>
+                            <Form.Label>Ngày kết thúc</Form.Label>
+                            <Form.Control
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                            />
+                        </Col>
+                    </Row>
+
+                    <Button onClick={handleStatistic} className="w-100 mt-2" variant="primary">
+                        Thống kê
+                    </Button>
+                </Card>
+            </Container>
+
 
             {results && (
                 <>

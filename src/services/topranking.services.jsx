@@ -27,3 +27,7 @@ export const topranking = async (ranklike, rankcommnet, rankvote) => {
 
   return response;
 };
+export const sumtotalscore = async (topic_id) => {
+  const response = await userAxios.get(`/sumtotalscore/${topic_id}`)
+  return   response;
+};

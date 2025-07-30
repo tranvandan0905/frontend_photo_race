@@ -92,8 +92,6 @@ const TransactionManagement = () => {
         <Spinner animation="border" />
       </div>
     );
-
-  // Tính tổng tiền của đơn nạp hoặc đơn rút (chỉ tính đơn có trạng thái "success")
   const totalAmount =
     activeTab === 'deposit'
       ? depositList
@@ -104,7 +102,7 @@ const TransactionManagement = () => {
           .reduce((sum, item) => sum + (item.amount || 0), 0);
 
   return (
-    <Container>
+    <Container  className="mt-5">
       <Row className="mb-3 align-items-center">
         <Col className="text-start">
           <ButtonGroup>
@@ -126,7 +124,7 @@ const TransactionManagement = () => {
           <h5 className="mb-0">
             Tổng tiền:{' '}
             <span className="text-success fw-bold">
-              {totalAmount.toLocaleString('vi-VN')} VNĐ
+              {(totalAmount*1000).toLocaleString('vi-VN')} VNĐ
             </span>
           </h5>
         </Col>

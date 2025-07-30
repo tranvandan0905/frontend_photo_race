@@ -43,3 +43,15 @@ export const emailpassword = async (email) => {
   const response = await userAxios.post(`/email-password`, { email });
   return response;
 };
+export const postfriendship = async (id) => {
+  const response = await userAxios.get(`/friendship/${id}`);
+  return response;
+};
+export const getfriendship = async (check) => {
+  const response = await userAxios.get(`/friendship/find/${check}`);
+  return response;
+};
+export const updatefriendship = async (id,data) => {
+  const response = await userAxios.put(`/friendship/${id}`,data);
+  return response;
+};

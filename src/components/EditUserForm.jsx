@@ -36,10 +36,19 @@ const EditUserForm = () => {
 
   return (
     <Container className="mt-5">
-      <Card className="p-4 shadow">
-        <h4 className="mb-4 text-center">Chỉnh sửa thông tin cá nhân</h4>
+      <Card
+        className="p-4 shadow-lg rounded-4 mx-auto"
+        style={{ maxWidth: '500px' }}
+      >
+        <h4 className="mb-4 text-center text-primary fw-bold">
+          Chỉnh sửa thông tin cá nhân
+        </h4>
 
-        {message && <Alert variant={variant}>{message}</Alert>}
+        {message && (
+          <Alert variant={variant} className="text-center">
+            {message}
+          </Alert>
+        )}
 
         <Form onSubmit={handleSubmit}>
           <Form.Group controlId="formName" className="mb-3">
